@@ -42,6 +42,7 @@ maven-deploy:
   stage: deploy
   image: maven:alpine
   before_script:
+    - 'which git || (apk add --update git && rm -rf /var/cache/apk/*)'
     - git submodule sync --recursive
     - git submodule update --init --recursive
   script: "mvn clean deploy $MAVEN_CLI_OPTS -Pprod"
