@@ -48,9 +48,6 @@ maven-deploy:
     - mkdir -p /cert
     - cp wildfly-sigla/src/modules/system/layers/base/it/cnr/sigla/configuration/main/cert.p12 /cert/
     - mvn clean deploy $MAVEN_CLI_OPTS -Pprod
-  artifacts:
-    paths:
-      - target/*.jar
   only:
     - master
   except:
@@ -59,10 +56,13 @@ maven-deploy:
 maven-install:
   stage: deploy
   image: maven:alpine
-  script: "mvn clean install $MAVEN_CLI_OPTS"
-  artifacts:
-    paths:
-      - target/*.jar
+  before_script:
+    - 'which git || (apk add --update git && rm -rf /var/cache/apk/*)'
+  script:
+    - git submodule add $CENTRO_SERVIZI
+    - mkdir -p /cert
+    - cp wildfly-sigla/src/modules/system/layers/base/it/cnr/sigla/configuration/main/cert.p12 /cert/
+    - mvn clean deploy $MAVEN_CLI_OPTS
   except:
     - tags
     - master
