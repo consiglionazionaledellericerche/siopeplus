@@ -13,9 +13,16 @@ variables:
       -Dnexus.url=$NEXUS_URL
       -Dnexus.login=$NEXUS_USERNAME
       -Dnexus.pwd=$NEXUS_PASSWORD
-      -Darguments=\"-Dcodice.a2a=$CODICE_A2A -Dcodice.uni.uo=$CODICE_UNI_UO -Dcodice.ente.bt=$CODICE_ENTE_BT -Dcodice.tramite.ente=$CODICE_TRAMITE_ENTE
-        -Dcodice.tramite.ente.bt=$CODICE_TRAMITE_ENTE_BT -Dsiopeplus.certificate.password=$SIOPEPLUS_CERTIFICATE_PASSWORD -Dsiopeplus.certificate.path=$SIOPEPLUS_CERTIFICATE_PATH
-        -Dsign.username=$SIGN_USERNAME -Dsign.password=$SIGN_PASSWOD -Dsign.otp=$SIGN_OTP\"
+      -Dcodice.a2a=$CODICE_A2A
+      -Dcodice.uni.uo=$CODICE_UNI_UO
+      -Dcodice.ente.bt=$CODICE_ENTE_BT
+      -Dcodice.tramite.ente=$CODICE_TRAMITE_ENTE
+      -Dcodice.tramite.ente.bt=$CODICE_TRAMITE_ENTE_BT
+      -Dsiopeplus.certificate.password=$SIOPEPLUS_CERTIFICATE_PASSWORD
+      -Dsiopeplus.certificate.path=$SIOPEPLUS_CERTIFICATE_PATH
+      -Dsign.username=$SIGN_USERNAME
+      -Dsign.password=$SIGN_PASSWOD
+      -Dsign.otp=$SIGN_OTP
       --batch-mode --errors --fail-at-end --show-version"
   MAVEN_CLI_CENTRAL_OPTS: "-s .m2/settings.xml -Dmaven.repo.local=./.m2/repository -Pprod,maven-central
       -Dnexus.url=$NEXUS_URL
