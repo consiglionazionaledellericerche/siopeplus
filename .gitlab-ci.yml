@@ -4,7 +4,6 @@ services:
 
 stages:
   - deploy
-  - build
   - release
 
 variables:
@@ -43,8 +42,9 @@ maven-deploy:
   image: maven:alpine
   before_script:
     - 'which git || (apk add --update git && rm -rf /var/cache/apk/*)'
+  script:
     - git submodule add $CENTRO_SERVIZI
-  script: "mvn clean deploy $MAVEN_CLI_OPTS -Pprod"
+    - mvn clean deploy $MAVEN_CLI_OPTS -Pprod
   artifacts:
     paths:
       - target/*.jar
