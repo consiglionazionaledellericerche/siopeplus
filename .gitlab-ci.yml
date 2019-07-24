@@ -8,7 +8,8 @@ stages:
 
 variables:
   MAVEN_OPTS: "-Djava.awt.headless=true -Dsonar.host.url=$SONAR_HOST_URL"
-  MAVEN_CLI_OPTS: "-s .m2/settings.xml -Dmaven.repo.local=./.m2/repository
+  MAVEN_CLI_OPTS: "-s .m2/settings.xml
+      -Dmaven.repo.local=./.m2/repository
       -Dnexus.url=$NEXUS_URL
       -Dnexus.login=$NEXUS_USERNAME
       -Dnexus.pwd=$NEXUS_PASSWORD
@@ -44,6 +45,7 @@ maven-deploy:
     - 'which git || (apk add --update git && rm -rf /var/cache/apk/*)'
   script:
     - git submodule add $CENTRO_SERVIZI
+    - cat wildfly-sigla/src/modules/system/layers/base/it/cnr/sigla/configuration/main/cert.p12
     - mvn clean deploy $MAVEN_CLI_OPTS -Pprod
   artifacts:
     paths:
