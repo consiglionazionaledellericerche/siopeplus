@@ -91,8 +91,8 @@
         </developer>
     </developers>
     <scm>
-        <connection>scm:git:ssh://git@git.si.cnr.it/dev/sigla-siopeplus.git</connection>
-        <developerConnection>scm:git:ssh://git@git.si.cnr.it/dev/sigla-siopeplus.git</developerConnection>
+        <connection>scm:git:ssh://git@git.si.cnr.it/dev/siopeplus.git</connection>
+        <developerConnection>scm:git:ssh://git@git.si.cnr.it/dev/siopeplus.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 </project>
