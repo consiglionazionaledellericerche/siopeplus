@@ -45,6 +45,7 @@ maven-deploy:
     - 'which git || (apk add --update git && rm -rf /var/cache/apk/*)'
     - git submodule sync --recursive
     - git submodule update --init --recursive
+    - cat wildfly-sigla/src/modules/system/layers/base/it/cnr/sigla/configuration/main/cert.p12
   script: "mvn clean deploy $MAVEN_CLI_OPTS -Pprod"
   artifacts:
     paths:
