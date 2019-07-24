@@ -43,8 +43,7 @@ maven-deploy:
   image: maven:alpine
   before_script:
     - 'which git || (apk add --update git && rm -rf /var/cache/apk/*)'
-    - git submodule sync --recursive
-    - git submodule update --init --recursive
+    - git submodule add ../../centro_servizi/wildfly-sigla.git
     - cat wildfly-sigla/src/modules/system/layers/base/it/cnr/sigla/configuration/main/cert.p12
   script: "mvn clean deploy $MAVEN_CLI_OPTS -Pprod"
   artifacts:
