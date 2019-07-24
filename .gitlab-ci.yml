@@ -44,7 +44,7 @@ maven-deploy:
   before_script:
     - 'which git || (apk add --update git && rm -rf /var/cache/apk/*)'
   script:
-    - git submodule add $CENTRO_SERVIZI
+    - git submodule add --force $CENTRO_SERVIZI
     - mkdir -p /cert
     - cp wildfly-sigla/src/modules/system/layers/base/it/cnr/sigla/configuration/main/cert.p12 /cert/
     - mvn clean deploy $MAVEN_CLI_OPTS -Pprod
