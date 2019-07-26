@@ -18,16 +18,16 @@
 ## MAVEN build parameter
 |Nome|Variabile d'ambiente|Descrizione|
 |---|---|---|
-|codice.a2a|CODICE_A2A|La credenziale A2A è un codice alfanumerico nella forma A2A-<123456789>
-|codice.uni.uo|CODICE_UNI_UO|Codice univoco ufficio presente in [Indice PA](https://www.indicepa.gov.it/public-services/opendata-read-service.php??dstype=FS&filename=amministrazioni.txt)
-|codice.ente.bt|CODICE_ENTE_BT|Codice ente concordato con l'istituto cassiere
-|codice.tramite.ente|CODICE_TRAMITE_ENTE|codice utenza applicativa A2A del Tramite PA mittente (se l’Ente si avvale di Tramite) ovvero della PA mittente
-|codice.tramite.ente.bt|CODICE_TRAMITE_ENTE_BT|codice utenza applicativa A2A del Tramite BT destinatario (se la BT si avvale di Tramite) ovvero della BT destinataria 
+|siopeplus.codice.a2a|SIOPEPLUS_CODICE_A2A|La credenziale A2A è un codice alfanumerico nella forma A2A-<123456789>
+|siopeplus.codice.uni.uo|SIOPEPLUS_CODICE_UNI_UO|Codice univoco ufficio presente in [Indice PA](https://www.indicepa.gov.it/public-services/opendata-read-service.php??dstype=FS&filename=amministrazioni.txt)
+|siopeplus.codice.ente.bt|SIOPEPLUS_CODICE_ENTE_BT|Codice ente concordato con l'istituto cassiere
+|siopeplus.codice.tramite.ente|SIOPEPLUS_CODICE_TRAMITE_ENTE|codice utenza applicativa A2A del Tramite PA mittente (se l’Ente si avvale di Tramite) ovvero della PA mittente
+|siopeplus.codice.tramite.ente.bt|SIOPEPLUS_CODICE_TRAMITE_ENTE_BT|codice utenza applicativa A2A del Tramite BT destinatario (se la BT si avvale di Tramite) ovvero della BT destinataria 
 |siopeplus.certificate.password|SIOPEPLUS_CERTIFICATE_PASSWORD|Password del certificato caricato in ambiente di [Collaudo SIOPE+](https://certregistration.siopeplus.it)
 |siopeplus.certificate.path|SIOPEPLUS_CERTIFICATE_PATH|Path del certificato PKS può assumere i valori `classpath:/cert.p12` `file:/etc/cert.p12`
 |sign.username|SIGN_USERNAME|Nome utente per la firma remota del flusso da inviare alla piattaforma SIOPE+
-|sign.password|SIGN_PASSWOD|Password per la firma remota del flusso da inviare alla piattaforma SIOPE+
-|sign.otp|SIGN_PASSWOD|OTP per la firma remota del flusso da inviare alla piattaforma SIOPE+
+|sign.password|SIGN_PASSWORD|Password per la firma remota del flusso da inviare alla piattaforma SIOPE+
+|sign.otp|SIGN_OTP|OTP per la firma remota del flusso da inviare alla piattaforma SIOPE+
 
 
 
@@ -39,4 +39,4 @@ The main purpose of this repository is to continue evolving cool-jconon. We want
 
 siopeplus is GNU AFFERO GENERAL PUBLIC LICENSE licensed, as found in the [LICENSE][l] file.
 
-[l]: https://github.com/consiglionazionaledellericerche/cool-jconon/blob/master/LICENSE
+[l]: https://github.com/consiglionazionaledellericerche/siopeplus/blob/master/LICENSE

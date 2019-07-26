@@ -165,13 +165,13 @@ public class OrdinativiSiopePlusTest {
 
         final CtTestataFlusso testataFlusso = objectFactory.createCtTestataFlusso();
         testataFlusso.setCodiceABIBT("01005");
-        testataFlusso.setRiferimentoEnte(environment.getProperty("codice.a2a"));
+        testataFlusso.setRiferimentoEnte(environment.getProperty("siopeplus.codice.a2a"));
         testataFlusso.setIdentificativoFlusso(LocalDateTime.now().getYear() + "-TEST-" + LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + "-I");
         testataFlusso.setDataOraCreazioneFlusso(DatatypeFactory.newInstance().newXMLGregorianCalendar(formatterTime.format(date)));
-        testataFlusso.setCodiceEnte(environment.getProperty("codice.uni.uo"));
-        testataFlusso.setCodiceEnteBT(environment.getProperty("codice.ente.bt"));
-        testataFlusso.setCodiceTramiteEnte(environment.getProperty("codice.tramite.ente"));
-        testataFlusso.setCodiceTramiteBT(environment.getProperty("codice.tramite.ente.bt"));
+        testataFlusso.setCodiceEnte(environment.getProperty("siopeplus.codice.uni.uo"));
+        testataFlusso.setCodiceEnteBT(environment.getProperty("siopeplus.codice.ente.bt"));
+        testataFlusso.setCodiceTramiteEnte(environment.getProperty("siopeplus.codice.tramite.ente"));
+        testataFlusso.setCodiceTramiteBT(environment.getProperty("siopeplus.codice.tramite.ente.bt"));
         testataFlusso.setDescrizioneEnte("Consiglio Nazionale delle Ricerche");
         testataFlusso.setCodiceIstatEnte("000713516000000");
         testataFlusso.setCodiceFiscaleEnte("80054330586");
