@@ -73,8 +73,15 @@
 			<plugin>
 				<groupId>org.jvnet.jaxb2.maven2</groupId>
 				<artifactId>maven-jaxb2-plugin</artifactId>
+				<version>0.14.0</version>
 				<configuration>
 					<schemaDirectory>${project.basedir}/src/main/resources/xsd</schemaDirectory>
+					<schemaIncludes>
+						<include>*.xsd</include>
+					</schemaIncludes>
+					<schemaExcludes>
+						<exclude>OPI_GIORNALE_DI_CASSA_V_1_3_1a.xsd</exclude>
+					</schemaExcludes>
 					<generatePackage>it.siopeplus.giornaledicassa</generatePackage>
 					<plugins>
 						<plugin>
