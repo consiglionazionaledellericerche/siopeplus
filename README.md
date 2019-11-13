@@ -33,7 +33,7 @@
 
 ## 👏 How to Contribute
 
-The main purpose of this repository is to continue evolving cool-jconon. We want to make contributing to this project as easy and transparent as possible, and we are grateful to the community for contributing bugfixes and improvements.
+The main purpose of this repository is to continue evolving SIOPE+. We want to make contributing to this project as easy and transparent as possible, and we are grateful to the community for contributing bugfixes and improvements.
 
 ## 📄 License
 
