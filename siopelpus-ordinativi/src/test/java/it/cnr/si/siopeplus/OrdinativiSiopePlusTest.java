@@ -96,7 +96,7 @@ public class OrdinativiSiopePlusTest {
     public void downloadACK() {
         final List<Risultato> lista = ordinativiSiopePlusService.getAllMessaggi(
                 Esito.ACK,
-                LocalDateTime.of(2019,6, 1,5,0),
+                LocalDateTime.now().minusMonths(2),
                 null,
                 true,
                 null);
@@ -115,7 +115,7 @@ public class OrdinativiSiopePlusTest {
     public void downloadEsito() {
         final List<Risultato> lista = ordinativiSiopePlusService.getAllMessaggi(
                 Esito.ESITO,
-                LocalDateTime.of(2019,6, 1,5,0),
+                LocalDateTime.now().minusMonths(2),
                 null,
                 true,
                 null);
@@ -134,7 +134,7 @@ public class OrdinativiSiopePlusTest {
     public void downloadEsitoApplicativo() {
         final List<Risultato> lista = ordinativiSiopePlusService.getAllMessaggi(
                 Esito.ESITOAPPLICATIVO,
-                LocalDateTime.of(2019,6, 1,5,0),
+                LocalDateTime.now().minusMonths(2),
                 null,
                 true,
                 null);
