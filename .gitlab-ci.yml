@@ -47,7 +47,7 @@ maven-deploy:
     - git submodule add --force $CENTRO_SERVIZI
     - mkdir -p /cert
     - cp wildfly-sigla/src/modules/system/layers/base/it/cnr/sigla/configuration/main/cert.p12 /cert/
-    - mvn clean deploy $MAVEN_CLI_OPTS -Pprod -DskipTests
+    - mvn clean deploy $MAVEN_CLI_OPTS -Pprod
   only:
     - master
   except:
