@@ -8,17 +8,17 @@
         <jaxb:globalBindings>
             <xjc:serializable uid="-1"/>
         </jaxb:globalBindings>
-        <jaxb:bindings schemaLocation="OPI_MSG_RICEZIONE_FLUSSO_V_1_3_1a.xsd" >
+        <jaxb:bindings schemaLocation="OPI_MSG_RICEZIONE_FLUSSO_V_1_5.xsd" >
             <jaxb:bindings node="//xs:element[@name='messaggio_ricezione_flusso']">
               <jaxb:class ref="MessaggioRicezioneFlusso"/>
             </jaxb:bindings>
         </jaxb:bindings>
-        <jaxb:bindings schemaLocation="OPI_MSG_RIFIUTO_FLUSSO_V_1_3_1a.xsd" >
+        <jaxb:bindings schemaLocation="OPI_MSG_RIFIUTO_FLUSSO_V_1_5.xsd" >
             <jaxb:bindings node="//xs:element[@name='messaggio_rifiuto_flusso']">
                 <jaxb:class ref="MessaggioRifiutoFlusso"/>
             </jaxb:bindings>
         </jaxb:bindings>
-        <jaxb:bindings schemaLocation="OPI_MSG_ESITO_APPLICATIVO_V_1_3_1a.xsd" >
+        <jaxb:bindings schemaLocation="OPI_MSG_ESITO_APPLICATIVO_V_1_5.xsd" >
             <jaxb:bindings node="//xs:element[@name='messaggi_esito_applicativo']">
                 <jaxb:class ref="MessaggiEsitoApplicativo"/>
             </jaxb:bindings>
