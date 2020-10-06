@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<!-- SCHEMA GIORNALE DI CASSA OPI Versione 1.5 -->
+<!-- SCHEMA GIORNALE DI CASSA Versione 1.5.1 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:opi="http://ws.pagamenti.telematici.gov/" elementFormDefault="qualified" attributeFormDefault="unqualified">
   <xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"/>
   <!--    -->
-  <xs:include schemaLocation="OPI_GLOBAL_V_1_5.xsd"/>
+  <xs:include schemaLocation="OPI_GLOBAL_V_1_5_1_1.xsd"/>
   <!--    -->
   <xs:simpleType name="OnlyNumMax7">
     <xs:annotation>
@@ -16,7 +16,7 @@
   </xs:simpleType>
   <xs:simpleType name="OnlyNumMax18">
     <xs:annotation>
-      <xs:documentation>Solo numeri lunghezza massima 7</xs:documentation>
+      <xs:documentation>Solo numeri lunghezza massima 18</xs:documentation>
     </xs:annotation>
     <xs:restriction base="xs:nonNegativeInteger">
       <xs:maxInclusive value="999999999999999999"/>
@@ -51,8 +51,7 @@
           <xs:element ref="pagine_totali" minOccurs="1"/>
           <xs:element ref="riferimento_ente" minOccurs="0"/>
           <xs:element ref="esercizio"/>
-          <xs:element ref="data_inizio_periodo_riferimento"/>
-          <xs:element ref="data_fine_periodo_riferimento"/>
+          <xs:element ref="data_riferimento_GdC"/>
           <xs:element ref="informazioni_conto_evidenza" maxOccurs="unbounded"/>
           <xs:element ref="saldo_complessivo_precedente" minOccurs="0"/>
           <xs:element ref="totale_complessivo_entrate" minOccurs="0"/>
@@ -64,12 +63,11 @@
         <xs:sequence>
           <xs:element ref="testata_messaggio"/>
           <xs:element ref="identificativo_flusso_BT"/>
-          <xs:element ref="pagina" minOccurs="0"/>
-          <xs:element ref="pagine_totali" minOccurs="0"/>
+          <xs:element ref="pagina" minOccurs="1"/>
+          <xs:element ref="pagine_totali" minOccurs="1"/>
           <xs:element ref="riferimento_ente" minOccurs="0"/>
           <xs:element ref="esercizio"/>
-          <xs:element ref="data_inizio_periodo_riferimento"/>
-          <xs:element ref="data_fine_periodo_riferimento"/>
+          <xs:element ref="data_riferimento_GdC"/>
           <xs:element ref="informazioni_conto_evidenza" maxOccurs="unbounded"/>
           <xs:element ref="saldo_complessivo_precedente" minOccurs="0"/>
           <xs:element ref="totale_complessivo_entrate" minOccurs="0"/>
@@ -87,7 +85,7 @@
   <xs:element name="identificativo_flusso_BT">
     <xs:simpleType>
       <xs:restriction base="xs:string">
-        <xs:pattern value="GDC-[0-9{8}A-Za-z0-9{10,50}#0-9{3}#0-9{3}]"/>
+        <xs:pattern value="GDC-[0-9]{8}[A-Za-z0-9]{10,50}#[0-9]{3}#[0-9]{3}"/>
         <xs:maxLength value="70"/>
       </xs:restriction>
     </xs:simpleType>
@@ -107,12 +105,7 @@
       </xs:restriction>
     </xs:simpleType>
   </xs:element>
-  <xs:element name="data_inizio_periodo_riferimento">
-    <xs:simpleType>
-      <xs:restriction base="xs:date"/>
-    </xs:simpleType>
-  </xs:element>
-  <xs:element name="data_fine_periodo_riferimento">
+  <xs:element name="data_riferimento_GdC">
     <xs:simpleType>
       <xs:restriction base="xs:date"/>
     </xs:simpleType>
@@ -163,67 +156,13 @@ USCITA</xs:documentation>
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-        <xs:choice>
-            <xs:sequence>
-              <xs:element name="tipo_documento_sdr">
-                <xs:annotation>
-                  <xs:documentation>può assumere i valori
-SOSPESO ENTRATA
-SOSPESO USCITA</xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                  <xs:restriction base="xs:string">
-                    <xs:enumeration value="SOSPESO ENTRATA"/>
-                    <xs:enumeration value="SOSPESO USCITA"/>
-                  </xs:restriction>
-                </xs:simpleType>
-              </xs:element>
-              <xs:element name="tipo_operazione_sdr">
-                <xs:annotation>
-                  <xs:documentation>può assumere i valori ESEGUITO
-STORNATO</xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                  <xs:restriction base="xs:string">
-                    <xs:enumeration value="ESEGUITO"/>
-                    <xs:enumeration value="STORNATO"/>
-                  </xs:restriction>
-                </xs:simpleType>
-              </xs:element>
-              <xs:element name="numero_documento_sdr">
-                <xs:simpleType>
-                  <xs:restriction base="xs:nonNegativeInteger">
-                    <xs:minInclusive value="0"/>
-                    <xs:maxInclusive value="999999999999999999"/>
-                  </xs:restriction>
-                </xs:simpleType>
-              </xs:element>
-              <xs:element name="sospeso_da_regolarizzare">
-                <xs:complexType>
-                  <xs:sequence>
-                    <xs:element name="data_effettiva_sospeso">
-                      <xs:simpleType>
-                        <xs:restriction base="xs:date"/>
-                      </xs:simpleType>
-                    </xs:element>
-                    <xs:element name="codice_gestionale_provvisorio">
-                      <xs:simpleType>
-                        <xs:restriction base="xs:string">
-                          <xs:pattern value="[9]{3,4}[5-9]{1}"/>
-                        </xs:restriction>
-                      </xs:simpleType>
-                    </xs:element>
-                  </xs:sequence>
-                </xs:complexType>
-              </xs:element>
-            </xs:sequence>
-          <!--    -->
-            <xs:sequence>
               <xs:element name="tipo_documento">
                 <xs:annotation>
                   <xs:documentation>può assumere i valori
 REVERSALE
 MANDATO
+SOSPESO ENTRATA
+SOSPESO USCITA
 ANTICIPAZIONE
 GIROCONTO
 FONDO DI CASSA
@@ -233,6 +172,8 @@ DEFICIT DI CASSA</xs:documentation>
                   <xs:restriction base="xs:string">
                     <xs:enumeration value="REVERSALE"/>
                     <xs:enumeration value="MANDATO"/>
+                    <xs:enumeration value="SOSPESO ENTRATA"/>
+                    <xs:enumeration value="SOSPESO USCITA"/>
                     <xs:enumeration value="ANTICIPAZIONE"/>
                     <xs:enumeration value="GIROCONTO"/>
                     <xs:enumeration value="FONDO DI CASSA"/>
@@ -264,8 +205,25 @@ RIPRISTINATO</xs:documentation>
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-            </xs:sequence>
-        </xs:choice>
+              <xs:element name="sospeso_da_regolarizzare" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="data_effettiva_sospeso">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:date"/>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="codice_gestionale_provvisorio">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:pattern value="\d{4}"/>
+                          <xs:pattern value="\d{10}"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
               <xs:element name="tipologia_pagamento_funzionario_delegato" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string"/>
@@ -987,15 +945,5 @@ ASSOGGETTAMENTO COMMISSIONI A CARICO CLIENTE</xs:documentation>
     </xs:complexType>
   </xs:element>
 </xs:schema>
-
-
-
-
-
-
-
-
-
-
 
 

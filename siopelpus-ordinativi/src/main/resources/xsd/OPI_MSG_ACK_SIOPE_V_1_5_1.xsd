@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- SCHEMA Messaggio di ACK SIOPE - Versione 1.5 -->
+<!-- SCHEMA Messaggio di ACK SIOPE - Versione 1.5.1 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<!--    -->
-  <xs:include schemaLocation="OPI_GLOBAL_V_1_5.xsd"/>
+  <xs:include schemaLocation="OPI_GLOBAL_V_1_5_1_1.xsd"/>
   <!--    -->
 	<!-- Definizione Tipi semplici          -->
   <xs:simpleType name="stStato_flusso">
@@ -52,7 +52,7 @@
           </xs:annotation>
         </xs:element>
         <xs:element name="identificativo_flusso" type="xs:string" minOccurs="0"/>
-        <xs:element name="identificativo_flusso_BT" type="sTId_flusso_BT" minOccurs="0"/>
+        <xs:element name="identificativo_flusso_BT" type="stIdFlussoBT" minOccurs="0"/>
         <xs:element name="esercizio" type="stEsercizio" minOccurs="0"/>
         <xs:element name="stato_flusso" type="stStato_flusso"/>
         <xs:element name="errore" type="ctErroreACK" minOccurs="0" maxOccurs="unbounded"/>
@@ -61,8 +61,4 @@
     </xs:complexType>
   </xs:element>
 </xs:schema>
-
-
-
-
 

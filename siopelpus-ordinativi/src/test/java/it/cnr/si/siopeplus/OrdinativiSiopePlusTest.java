@@ -49,14 +49,13 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.*;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -80,14 +79,15 @@ public class OrdinativiSiopePlusTest {
     @Autowired
     private ApplicationContext applicationContext;
 
-    static boolean validateAgainstXSD(InputStream xml, InputStream xsd) {
+    static boolean validateAgainstXSD(InputStream xml, URL xsd) {
         try {
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = factory.newSchema(new StreamSource(xsd));
+            Schema schema = factory.newSchema(xsd);
             Validator validator = schema.newValidator();
             validator.validate(new StreamSource(xml));
             return true;
         } catch (Exception ex) {
+            ex.printStackTrace();
             return false;
         }
     }
@@ -281,9 +281,11 @@ public class OrdinativiSiopePlusTest {
                 .orElseThrow(() -> new IllegalArgumentException()));
         byte[] contentSigned = client.xmlSignature(signUsername, signPassword, signOTP, out.getBytes(), XmlSignatureType.XMLENVELOPED);
 
-        Assert.isTrue(validateAgainstXSD(
-                new ByteArrayInputStream(contentSigned),
-                applicationContext.getResource ("classpath:xsd/OPI_FLUSSO_ORDINATIVI_V_1_3_1.xsd").getInputStream())
+        Assert.isTrue(
+                validateAgainstXSD(
+                    new ByteArrayInputStream(contentSigned),
+                    applicationContext.getResource ("classpath:xsd/OPI_FLUSSO_ORDINATIVI_V_1_5_1.xsd").getURL()
+                )
         );
         return new ByteArrayInputStream(contentSigned);
     }

@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<!-- SCHEMA FLUSSO ORDINATIVI OPI 1.5  -->
+<!-- SCHEMA FLUSSO ORDINATIVI OPI 1.5.1  -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" elementFormDefault="qualified" attributeFormDefault="unqualified">
   <xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"/>
   <!--    -->
-  <xs:include schemaLocation="OPI_GLOBAL_V_1_5.xsd"/>
+  <xs:include schemaLocation="OPI_GLOBAL_V_1_5_1_1.xsd"/>
   <!--    -->
   <!--  -->
   <xs:simpleType name="stABI_CAB">
@@ -1626,7 +1626,7 @@ M2 = due cifre che indicano il mene "al" di riferimento del versamento (es, 01 g
           </xs:restriction>
         </xs:simpleType>
       </xs:element>
-      <xs:element name="utilizzo_nota_di_credito">
+      <xs:element name="utilizzo_nota_di_credito" minOccurs="0">
         <xs:annotation>
           <xs:documentation>Contiene il tipo di utilizzo della nota di credito</xs:documentation>
         </xs:annotation>
@@ -1811,17 +1811,17 @@ M2 = due cifre che indicano il mene "al" di riferimento del versamento (es, 01 g
           <xs:documentation>Codice ISTAT dell'ente (codice SIOPE)</xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element name="codice_fiscale_ente" type="stCodice_fiscale_ente">
+      <xs:element name="codice_fiscale_ente" type="stCodiceFiscaleEnte">
         <xs:annotation>
           <xs:documentation>Codice fiscale dell'ente</xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element name="codice_tramite_ente" type="stCodice_A2A">
+      <xs:element name="codice_tramite_ente" type="stCodiceA2A">
         <xs:annotation>
           <xs:documentation>Identificativo del soggetto delegato dall’ente al colloquio con SIOPE+</xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element name="codice_tramite_BT" type="stCodice_A2A">
+      <xs:element name="codice_tramite_BT" type="stCodiceA2A">
         <xs:annotation>
           <xs:documentation>Identificativo del soggetto delegato dalla banca al colloquio con SIOPE+</xs:documentation>
         </xs:annotation>
@@ -1903,6 +1903,11 @@ M2 = due cifre che indicano il mene "al" di riferimento del versamento (es, 01 g
     </xs:unique>
   </xs:element>
 </xs:schema>
+
+
+
+
+
 
 
 

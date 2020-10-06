@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<!-- SCHEMA DISPONIBILITA' LIQUIDE Versione 1.5 -->
+<!-- SCHEMA DISPONIBILITA' LIQUIDE Versione 1.5.1 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:opi="http://ws.pagamenti.telematici.gov/" elementFormDefault="qualified" attributeFormDefault="unqualified">
   <xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"/>
   <!--    -->
-  <xs:include schemaLocation="OPI_GLOBAL_V_1_5.xsd"/>
+  <xs:include schemaLocation="OPI_GLOBAL_V_1_5_1_1.xsd"/>
   <!--    -->
   <xs:simpleType name="stAnno">
     <xs:restriction base="xs:nonNegativeInteger">
@@ -74,3 +74,4 @@
     </xs:complexType>
   </xs:element>
 </xs:schema>
+

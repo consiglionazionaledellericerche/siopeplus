@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<!-- SCHEMA Definizioni dati comuni Flusso OPI, MESSAGGI, Giornale di Cassa Versione 1.5 -->
+<!-- SCHEMA Definizioni dati comuni Versione 1.5.1.1 (OPI, Messaggi, GdC, DL) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 <!--    -->
 <!-- Definizione Tipi semplici          -->
-  <xs:simpleType name="sTId_flusso_BT">
+  <xs:simpleType name="stIdFlussoBT">
     <xs:annotation>
       <xs:documentation>Codice alfanumerico attribuito univocamente al flusso della BT</xs:documentation>
     </xs:annotation>
     <xs:restriction base="xs:string"/>
   </xs:simpleType>
-  <xs:simpleType name="stCodice_A2A">
+  <xs:simpleType name="stCodiceA2A">
     <xs:annotation>
       <xs:documentation>Codice alfanumerico per l'utilizzo dell’interfaccia A2A di SIOPE+</xs:documentation>
     </xs:annotation>
@@ -23,6 +23,7 @@
     </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:pattern value="[A-Z0-9]{6}"/>
+      <xs:length value="6"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="stCodiceISTAT_Ente">
@@ -31,16 +32,18 @@
     </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:pattern value="[0-9]{9,15}"/>
+      <xs:minLength value="9"/>
+      <xs:maxLength value="15"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:simpleType name="stCodice_fiscale_ente">
+  <xs:simpleType name="stCodiceFiscaleEnte">
     <xs:annotation>
       <xs:documentation>Codice Fiscale dell'Ente)</xs:documentation>
     </xs:annotation>
     <xs:restriction base="xs:string">
-      <xs:pattern value="[A-Z0-9]"/>
       <xs:minLength value="11"/>
       <xs:maxLength value="16"/>
+      <xs:pattern value="[A-Z0-9]{11,16}"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="stCodiceGestionaleSIOPE">
@@ -49,6 +52,8 @@
     </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:pattern value="[0-9]{4,10}"/>
+      <xs:minLength value="4"/>
+      <xs:maxLength value="10"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="stIdFlusso">
@@ -57,6 +62,8 @@
     </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:pattern value="[a-zA-Z0-9#_\-\.]{1,70}"/>
+      <xs:minLength value="1"/>
+      <xs:maxLength value="70"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="stMinUnoString">
@@ -69,11 +76,11 @@
   </xs:simpleType>
   <xs:simpleType name="stMinUnoStringNumeric">
     <xs:annotation>
-      <xs:documentation>Tipo generico stringa minimo 1 carattere di soli numeri</xs:documentation>
+      <xs:documentation>Tipo generico stringa minimo 1 e massimo 30 carattere di soli numeri</xs:documentation>
     </xs:annotation>
     <xs:restriction base="xs:string">
-      <xs:pattern value="[0-9]"/>
       <xs:minLength value="1"/>
+      <xs:pattern value="[0-9]{1,30}"/>
     </xs:restriction>
   </xs:simpleType>
   <!--    -->
@@ -121,17 +128,17 @@
           <xs:documentation>Codice ISTAT dell'ente (codice SIOPE)</xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element name="codice_fiscale_ente" type="stCodice_fiscale_ente">
+      <xs:element name="codice_fiscale_ente" type="stCodiceFiscaleEnte">
         <xs:annotation>
           <xs:documentation>Codice fiscale dell'ente</xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element name="codice_tramite_ente" type="stCodice_A2A">
+      <xs:element name="codice_tramite_ente" type="stCodiceA2A">
         <xs:annotation>
           <xs:documentation>Identificativo del soggetto delegato dall’ente al colloquio con SIOPE+</xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element name="codice_tramite_BT" type="stCodice_A2A">
+      <xs:element name="codice_tramite_BT" type="stCodiceA2A">
         <xs:annotation>
           <xs:documentation>Identificativo del soggetto delegato dalla banca al colloquio con SIOPE+</xs:documentation>
         </xs:annotation>
@@ -146,14 +153,5 @@
   <!--    -->
 <!-- Definizione Tipi complessi (fine)  -->
 </xs:schema>
-
-
-
-
-
-
-
-
-
 
 
