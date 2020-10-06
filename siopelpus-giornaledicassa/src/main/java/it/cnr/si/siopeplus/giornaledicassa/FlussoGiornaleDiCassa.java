@@ -86,7 +86,7 @@ import org.jvnet.jaxb2_commons.locator.ObjectLocator;
         "pagineTotali",
         "riferimentoEnte",
         "esercizio",
-        "data_riferimento_GdC",
+        "dataRiferimentoGdC",
         "informazioniContoEvidenza",
         "saldoComplessivoPrecedente",
         "totaleComplessivoEntrate",
