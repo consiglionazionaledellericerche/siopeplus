@@ -8,7 +8,7 @@
         <jaxb:globalBindings>
             <xjc:serializable uid="-1"/>
         </jaxb:globalBindings>
-        <jaxb:bindings schemaLocation="OPI_GIORNALE_DI_CASSA_V_1_5_1_1.xsd" >
+        <jaxb:bindings schemaLocation="OPI_GIORNALE_DI_CASSA_V_1_6_0.xsd" >
             <jaxb:bindings node="//xs:element[@name='flusso_giornale_di_cassa']">
               <jaxb:class ref="FlussoGiornaleDiCassa"/>
             </jaxb:bindings>

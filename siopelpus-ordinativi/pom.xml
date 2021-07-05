@@ -82,6 +82,7 @@
 					<schemaExcludes>
 						<exclude>OPI_FLUSSO_ORDINATIVI_V_1_3_1.xsd</exclude>
 						<exclude>OPI_FLUSSO_ORDINATIVI_V_1_4_1.xsd</exclude>
+						<exclude>OPI_FLUSSO_ORDINATIVI_V_1_5_1.xsd</exclude>
 					</schemaExcludes>
 					<generatePackage>it.siopeplus</generatePackage>
 					<plugins>
