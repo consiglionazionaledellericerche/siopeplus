@@ -25,6 +25,7 @@ import it.cnr.si.firmadigitale.firma.arss.ArubaSignServiceClient;
 import it.cnr.si.firmadigitale.firma.arss.ArubaSignServiceException;
 import it.cnr.si.firmadigitale.firma.arss.stub.XmlSignatureType;
 import it.siopeplus.*;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -150,6 +151,7 @@ public class OrdinativiSiopePlusTest {
     }
 
     @Test
+    @Ignore
     public void postFLUSSO() throws JAXBException, IOException, DatatypeConfigurationException, ArubaSignServiceException, SIOPEPlusServiceUnavailable {
         final InputStream inputStream = generaFlusso();
         final Risultato risultato = ordinativiSiopePlusService.postFlusso(inputStream);
@@ -284,7 +286,7 @@ public class OrdinativiSiopePlusTest {
         Assert.isTrue(
                 validateAgainstXSD(
                     new ByteArrayInputStream(contentSigned),
-                    applicationContext.getResource ("classpath:xsd/OPI_FLUSSO_ORDINATIVI_V_1_5_1.xsd").getURL()
+                    applicationContext.getResource ("classpath:xsd/OPI_FLUSSO_ORDINATIVI_V_1_6_0.xsd").getURL()
                 )
         );
         return new ByteArrayInputStream(contentSigned);
