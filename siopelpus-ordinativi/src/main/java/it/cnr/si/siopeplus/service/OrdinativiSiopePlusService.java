@@ -219,7 +219,7 @@ public class OrdinativiSiopePlusService extends CommonsSiopePlusService {
 
     public void validateFlussoOrdinativi(InputStream xml) throws SAXException, IOException {
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema schema = factory.newSchema(this.getClass().getResource("/xsd/OPI_FLUSSO_ORDINATIVI_V_1_5_1.xsd"));
+        Schema schema = factory.newSchema(this.getClass().getResource("/xsd/OPI_FLUSSO_ORDINATIVI_V_1_6_0.xsd"));
         Validator validator = schema.newValidator();
         validator.validate(new StreamSource(xml));
     }
