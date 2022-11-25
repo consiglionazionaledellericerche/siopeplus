@@ -17,9 +17,11 @@
 
 package it.cnr.si.siopeplus;
 
+import it.cnr.si.siopeplus.exception.SIOPEPlusServiceNotInstantiated;
 import it.cnr.si.siopeplus.exception.SIOPEPlusServiceUnavailable;
 import it.cnr.si.siopeplus.model.Esito;
 import it.cnr.si.siopeplus.model.Risultato;
+import it.cnr.si.siopeplus.service.OrdinativiSiopePlusFactory;
 import it.cnr.si.siopeplus.service.OrdinativiSiopePlusService;
 import it.cnr.si.firmadigitale.firma.arss.ArubaSignServiceClient;
 import it.cnr.si.firmadigitale.firma.arss.ArubaSignServiceException;
@@ -74,7 +76,8 @@ public class OrdinativiSiopePlusTest {
     private static final DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
     @Autowired
-    private OrdinativiSiopePlusService ordinativiSiopePlusService;
+    //private OrdinativiSiopePlusService ordinativiSiopePlusService;
+    private OrdinativiSiopePlusFactory ordinativiSiopePlusFactory;
     @Autowired
     private AbstractEnvironment environment;
     @Autowired
@@ -94,7 +97,8 @@ public class OrdinativiSiopePlusTest {
     }
 
     @Test
-    public void downloadACK() {
+    public void downloadACK() throws SIOPEPlusServiceNotInstantiated {
+        OrdinativiSiopePlusService ordinativiSiopePlusService=ordinativiSiopePlusFactory.getOrdinativiSiopePlusService("BT");
         final List<Risultato> lista = ordinativiSiopePlusService.getAllMessaggi(
                 Esito.ACK,
                 LocalDateTime.now().minusMonths(2),
@@ -113,7 +117,8 @@ public class OrdinativiSiopePlusTest {
     }
 
     @Test
-    public void downloadEsito() {
+    public void downloadEsito()throws SIOPEPlusServiceNotInstantiated {
+        OrdinativiSiopePlusService ordinativiSiopePlusService=ordinativiSiopePlusFactory.getOrdinativiSiopePlusService("BT");
         final List<Risultato> lista = ordinativiSiopePlusService.getAllMessaggi(
                 Esito.ESITO,
                 LocalDateTime.now().minusMonths(2),
@@ -132,7 +137,8 @@ public class OrdinativiSiopePlusTest {
     }
 
     @Test
-    public void downloadEsitoApplicativo() {
+    public void downloadEsitoApplicativo() throws SIOPEPlusServiceNotInstantiated{
+        OrdinativiSiopePlusService ordinativiSiopePlusService=ordinativiSiopePlusFactory.getOrdinativiSiopePlusService("BT");
         final List<Risultato> lista = ordinativiSiopePlusService.getAllMessaggi(
                 Esito.ESITOAPPLICATIVO,
                 LocalDateTime.now().minusMonths(2),
@@ -152,9 +158,9 @@ public class OrdinativiSiopePlusTest {
 
     @Test
     @Ignore
-    public void postFLUSSO() throws JAXBException, IOException, DatatypeConfigurationException, ArubaSignServiceException, SIOPEPlusServiceUnavailable {
+    public void postFLUSSO() throws JAXBException, IOException, DatatypeConfigurationException, ArubaSignServiceException, SIOPEPlusServiceUnavailable, SIOPEPlusServiceNotInstantiated {
         final InputStream inputStream = generaFlusso();
-        final Risultato risultato = ordinativiSiopePlusService.postFlusso(inputStream);
+        final Risultato risultato = ordinativiSiopePlusFactory.getOrdinativiSiopePlusService("BT").postFlusso(inputStream);
         Assert.notNull(risultato);
     }
 

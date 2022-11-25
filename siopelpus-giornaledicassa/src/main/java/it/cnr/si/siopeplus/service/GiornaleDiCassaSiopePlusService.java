@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -52,6 +53,38 @@ public class GiornaleDiCassaSiopePlusService extends CommonsSiopePlusService{
     @Value("${siopeplus.url.giornaledicassa}")
     public String urlGiornaleDiCassa;
 
+    private String a2a;
+
+    private String uniuo;
+
+    public String getA2a() {
+        return a2a;
+    }
+
+    public void setA2a(String a2a) {
+        this.a2a = a2a;
+    }
+
+    public String getUniuo() {
+        return uniuo;
+    }
+
+    public void setUniuo(String uniuo) {
+        this.uniuo = uniuo;
+    }
+
+    private void resolveUrl(String a2a, String uniuo){
+        this.urlGiornaleDiCassa=this.urlGiornaleDiCassa.replace("${siopeplus.codice.a2a}",a2a).replace("${siopeplus.codice.uni.uo}",uniuo);
+    }
+
+    public GiornaleDiCassaSiopePlusService(String a2a, String uniuo) {
+        this.a2a = a2a;
+        this.uniuo = uniuo;
+    }
+    @PostConstruct
+    private void resolveUrl(){
+        resolveUrl(this.a2a,this.uniuo);
+    }
     public Lista getListaMessaggi(LocalDateTime dataDa, LocalDateTime dataA, Boolean download, Integer pagina) {
         CloseableHttpClient client = null;
         try {

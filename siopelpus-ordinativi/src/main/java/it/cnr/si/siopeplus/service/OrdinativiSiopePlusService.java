@@ -32,10 +32,18 @@ import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.EmbeddedValueResolverAware;
+import org.springframework.context.annotation.Scope;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.PropertyPlaceholderHelper;
+import org.springframework.util.StringValueResolver;
 import org.xml.sax.SAXException;
 
+import javax.annotation.PostConstruct;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -62,11 +70,10 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 @Service
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class OrdinativiSiopePlusService extends CommonsSiopePlusService {
     private transient static final Logger logger = LoggerFactory.getLogger(OrdinativiSiopePlusService.class);
-
 
     @Value("${siopeplus.url.flusso}")
     public String urlFlusso;
@@ -75,8 +82,43 @@ public class OrdinativiSiopePlusService extends CommonsSiopePlusService {
     @Value("${siopeplus.url.flusso.esito}")
     public String urlEsito;
     @Value("${siopeplus.url.esitoapplicativo}")
-    public String urlEsitoApplicativo;
+    private String urlEsitoApplicativo;
 
+    private String a2a;
+
+    private String uniuo;
+
+    public String getA2a() {
+        return a2a;
+    }
+
+    public void setA2a(String a2a) {
+        this.a2a = a2a;
+    }
+
+    public String getUniuo() {
+        return uniuo;
+    }
+
+    public void setUniuo(String uniuo) {
+        this.uniuo = uniuo;
+    }
+
+    private void resolveUrl(String a2a, String uniuo){
+        this.urlACK=this.urlACK.replace("${siopeplus.codice.a2a}",a2a).replace("${siopeplus.codice.uni.uo}",uniuo);
+        this.urlFlusso=this.urlFlusso.replace("${siopeplus.codice.a2a}",a2a).replace("${siopeplus.codice.uni.uo}",uniuo);
+        this.urlEsito=this.urlEsitoApplicativo.replace("${siopeplus.codice.a2a}",a2a).replace("${siopeplus.codice.uni.uo}",uniuo);
+        this.urlEsitoApplicativo=this.urlEsitoApplicativo.replace("${siopeplus.codice.a2a}",a2a).replace("${siopeplus.codice.uni.uo}",uniuo);
+    }
+
+    public OrdinativiSiopePlusService(String a2a, String uniuo) {
+        this.a2a = a2a;
+        this.uniuo = uniuo;
+    }
+    @PostConstruct
+    private void resolveUrl(){
+        resolveUrl(this.a2a,this.uniuo);
+    }
     public String getURL(Esito esito) {
         switch (esito) {
             case ACK:
