@@ -1,0 +1,46 @@
+#
+# Copyright (C) 2019  Consiglio Nazionale delle Ricerche
+#
+#     This program is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU Affero General Public License as
+#     published by the Free Software Foundation, either version 3 of the
+#     License, or (at your option) any later version.
+#
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU Affero General Public License for more details.
+#
+#     You should have received a copy of the GNU Affero General Public License
+#     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+
+arubaRemoteSignService:
+  certId: AS0
+  typeOtpAuth: demoprod
+  url: https://arss.demo.firma-automatica.it/ArubaSignService/ArubaSignService?wsdl
+
+siopeplus:
+  vAPI: v1
+  base_url: https://certa2a.siopeplus.it/${siopeplus.vAPI}
+  endpoints: BI,BT
+  endpoint:
+    BI:
+      a2a: A2A-37163813
+      uniuo: UF378V
+      base_url: ${siopeplus.base_url}/${siopeplus.endpoint.BI.a2a}/PA/${siopeplus.endpoint.BI.uniuo}
+      flusso: ${siopeplus.endpoint.BI.base_url}/flusso
+      ack: ${siopeplus.endpoint.BI.flusso}/ack
+      esitoflusso: ${siopeplus.endpoint.BI.flusso}/esitoflusso
+      esitoapplicativo: ${siopeplus.endpoint.BI.base_url}/esitoapplicativo
+      giornaledicassa: ${siopeplus.endpoint.BI.base_url}/giornale
+    BT:
+      a2a: A2A-37163813
+      uniuo: UF37BI
+      base_url: ${siopeplus.base_url}/${siopeplus.endpoint.BT.a2a}/PA/${siopeplus.endpoint.BT.uniuo}
+      flusso: ${siopeplus.endpoint.BT.base_url}/flusso
+      ack: ${siopeplus.endpoint.BT.flusso}/ack
+      esitoflusso: ${siopeplus.endpoint.BT.flusso}/esitoflusso
+      esitoapplicativo: ${siopeplus.endpoint.BT.base_url}/esitoapplicativo
+      giornaledicassa: ${siopeplus.endpoint.BT.base_url}/giornale
+

@@ -50,40 +50,15 @@ import java.util.Optional;
 @Service
 public class GiornaleDiCassaSiopePlusService extends CommonsSiopePlusService{
     private transient static final Logger logger = LoggerFactory.getLogger(GiornaleDiCassaSiopePlusService.class);
-    @Value("${siopeplus.url.giornaledicassa}")
-    public String urlGiornaleDiCassa;
+    private final String a2a;
 
-    private String a2a;
+    private final String uniuo;
+    private final String urlGiornaleDiCassa;
 
-    private String uniuo;
-
-    public String getA2a() {
-        return a2a;
-    }
-
-    public void setA2a(String a2a) {
-        this.a2a = a2a;
-    }
-
-    public String getUniuo() {
-        return uniuo;
-    }
-
-    public void setUniuo(String uniuo) {
-        this.uniuo = uniuo;
-    }
-
-    private void resolveUrl(String a2a, String uniuo){
-        this.urlGiornaleDiCassa=this.urlGiornaleDiCassa.replace("${siopeplus.codice.a2a}",a2a).replace("${siopeplus.codice.uni.uo}",uniuo);
-    }
-
-    public GiornaleDiCassaSiopePlusService(String a2a, String uniuo) {
+    public GiornaleDiCassaSiopePlusService(String a2a, String uniuo, String urlGiornaleDiCassa) {
         this.a2a = a2a;
         this.uniuo = uniuo;
-    }
-    @PostConstruct
-    private void resolveUrl(){
-        resolveUrl(this.a2a,this.uniuo);
+        this.urlGiornaleDiCassa = urlGiornaleDiCassa;
     }
     public Lista getListaMessaggi(LocalDateTime dataDa, LocalDateTime dataA, Boolean download, Integer pagina) {
         CloseableHttpClient client = null;

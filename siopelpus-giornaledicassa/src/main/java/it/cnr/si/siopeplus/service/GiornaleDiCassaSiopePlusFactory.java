@@ -13,41 +13,40 @@ import java.util.stream.Collectors;
 @Service
 public class GiornaleDiCassaSiopePlusFactory {
 
+    @Value("#{'${siopeplus.endpoints}'.split(',')}")
+    public List<String> endpoints;
     @Autowired
     private ApplicationContext appCtx;
-
-    @Value("#{${siopeplus.codiceuniuo}}")
-    private Map<String, String> uniuo;
-
-    @Value("${siopeplus.codice.a2a}")
-    public String a2a;
-
-    private Map<String, GiornaleDiCassaSiopePlusService> giornaleDiCassaSioepServices;
+    private final Map<String, GiornaleDiCassaSiopePlusService> giornaleDiCassaSiopePlusServices = new HashMap<String, GiornaleDiCassaSiopePlusService>();
 
     @PostConstruct
     private void createService() {
-        if (Optional.ofNullable(giornaleDiCassaSioepServices).isPresent()) {
-            for (Map.Entry<String, String> entry : uniuo.entrySet()) {
-                giornaleDiCassaSioepServices.put(entry.getKey(), (GiornaleDiCassaSiopePlusService) appCtx.getBean("giornaleDiCassaSiopePlusService", a2a, entry.getValue()));
-            }
-        }
+        endpoints.stream().forEach(s -> {
+            final String endpint = CommonsSiopePlusService.PREFIX.concat(".").concat(s).concat(".");
+            giornaleDiCassaSiopePlusServices.put(s, (GiornaleDiCassaSiopePlusService) appCtx.getBean(
+                    "giornaleDiCassaSiopePlusService",
+                    appCtx.getEnvironment().getProperty(endpint.concat("a2a")),
+                    appCtx.getEnvironment().getProperty(endpint.concat("uniuo")),
+                    appCtx.getEnvironment().getProperty(endpint.concat("giornaledicassa"))
+            ));
+        });
     }
 
-    public GiornaleDiCassaSiopePlusService getOrdinativiSiopePlusService(String key) throws SIOPEPlusServiceNotInstantiated{
-        return giornaleDiCassaSioepServices.entrySet().stream()
+    public GiornaleDiCassaSiopePlusService getOrdinativiSiopePlusService(String key) throws SIOPEPlusServiceNotInstantiated {
+        return giornaleDiCassaSiopePlusServices.entrySet().stream()
                 .filter(e -> key.equals(e.getKey()))
                 .map(Map.Entry::getValue)
-                .findFirst().orElseThrow(() -> new SIOPEPlusServiceNotInstantiated("cannot find GiornaleDiCassaSiopePlusService for ".concat( key )));
+                .findFirst().orElseThrow(() -> new SIOPEPlusServiceNotInstantiated("cannot find GiornaleDiCassaSiopePlusService for ".concat(key)));
     }
 
-    public List<GiornaleDiCassaSiopePlusService> getListGiornaleCassaSiopeService(){
-        if ( Optional.ofNullable(giornaleDiCassaSioepServices).isPresent()) {
-            return giornaleDiCassaSioepServices.values().stream().collect(Collectors.toList());
+    public List<GiornaleDiCassaSiopePlusService> getListGiornaleCassaSiopeService() {
+        if (Optional.ofNullable(giornaleDiCassaSiopePlusServices).isPresent()) {
+            return giornaleDiCassaSiopePlusServices.values().stream().collect(Collectors.toList());
         }
         return Collections.EMPTY_LIST;
     }
 
-    public Map<String,GiornaleDiCassaSiopePlusService> getMapGiornaleCassaSiopeService(){
-        return giornaleDiCassaSioepServices;
+    public Map<String, GiornaleDiCassaSiopePlusService> getMapGiornaleCassaSiopeService() {
+        return giornaleDiCassaSiopePlusServices;
     }
 }

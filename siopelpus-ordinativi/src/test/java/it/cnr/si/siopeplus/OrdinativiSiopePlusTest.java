@@ -17,15 +17,15 @@
 
 package it.cnr.si.siopeplus;
 
+import it.cnr.si.firmadigitale.firma.arss.ArubaSignServiceClient;
+import it.cnr.si.firmadigitale.firma.arss.ArubaSignServiceException;
+import it.cnr.si.firmadigitale.firma.arss.stub.XmlSignatureType;
 import it.cnr.si.siopeplus.exception.SIOPEPlusServiceNotInstantiated;
 import it.cnr.si.siopeplus.exception.SIOPEPlusServiceUnavailable;
 import it.cnr.si.siopeplus.model.Esito;
 import it.cnr.si.siopeplus.model.Risultato;
 import it.cnr.si.siopeplus.service.OrdinativiSiopePlusFactory;
 import it.cnr.si.siopeplus.service.OrdinativiSiopePlusService;
-import it.cnr.si.firmadigitale.firma.arss.ArubaSignServiceClient;
-import it.cnr.si.firmadigitale.firma.arss.ArubaSignServiceException;
-import it.cnr.si.firmadigitale.firma.arss.stub.XmlSignatureType;
 import it.siopeplus.*;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -50,33 +50,35 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Properties;
 import java.util.stream.Stream;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {AppConfig.class})
-@TestPropertySource("classpath:application-test.properties")
+@TestPropertySource(value = "classpath:application-test.properties")
 public class OrdinativiSiopePlusTest {
+    private static final DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     @Value("${sign.username}")
     private String signUsername;
     @Value("${sign.password}")
     private String signPassword;
     @Value("${sign.otp}")
     private String signOTP;
-
-    private static final DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private static final DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-
     @Autowired
-    //private OrdinativiSiopePlusService ordinativiSiopePlusService;
     private OrdinativiSiopePlusFactory ordinativiSiopePlusFactory;
     @Autowired
     private AbstractEnvironment environment;
@@ -98,7 +100,7 @@ public class OrdinativiSiopePlusTest {
 
     @Test
     public void downloadACK() throws SIOPEPlusServiceNotInstantiated {
-        OrdinativiSiopePlusService ordinativiSiopePlusService=ordinativiSiopePlusFactory.getOrdinativiSiopePlusService("BT");
+        OrdinativiSiopePlusService ordinativiSiopePlusService = ordinativiSiopePlusFactory.getOrdinativiSiopePlusService("BT");
         final List<Risultato> lista = ordinativiSiopePlusService.getAllMessaggi(
                 Esito.ACK,
                 LocalDateTime.now().minusMonths(2),
@@ -117,8 +119,8 @@ public class OrdinativiSiopePlusTest {
     }
 
     @Test
-    public void downloadEsito()throws SIOPEPlusServiceNotInstantiated {
-        OrdinativiSiopePlusService ordinativiSiopePlusService=ordinativiSiopePlusFactory.getOrdinativiSiopePlusService("BT");
+    public void downloadEsito() throws SIOPEPlusServiceNotInstantiated {
+        OrdinativiSiopePlusService ordinativiSiopePlusService = ordinativiSiopePlusFactory.getOrdinativiSiopePlusService("BT");
         final List<Risultato> lista = ordinativiSiopePlusService.getAllMessaggi(
                 Esito.ESITO,
                 LocalDateTime.now().minusMonths(2),
@@ -137,8 +139,8 @@ public class OrdinativiSiopePlusTest {
     }
 
     @Test
-    public void downloadEsitoApplicativo() throws SIOPEPlusServiceNotInstantiated{
-        OrdinativiSiopePlusService ordinativiSiopePlusService=ordinativiSiopePlusFactory.getOrdinativiSiopePlusService("BT");
+    public void downloadEsitoApplicativo() throws SIOPEPlusServiceNotInstantiated {
+        OrdinativiSiopePlusService ordinativiSiopePlusService = ordinativiSiopePlusFactory.getOrdinativiSiopePlusService("BT");
         final List<Risultato> lista = ordinativiSiopePlusService.getAllMessaggi(
                 Esito.ESITOAPPLICATIVO,
                 LocalDateTime.now().minusMonths(2),
@@ -281,7 +283,7 @@ public class OrdinativiSiopePlusTest {
 
         ArubaSignServiceClient client = new ArubaSignServiceClient();
         client.setProps(Stream.generate(environment.getPropertySources().iterator()::next)
-                .filter(propertySource -> propertySource.getName().contains("application-test.properties"))
+                .filter(propertySource -> propertySource.getName().contains("application-test.yml"))
                 .findAny()
                 .map(PropertySource::getSource)
                 .filter(Properties.class::isInstance)
@@ -291,8 +293,8 @@ public class OrdinativiSiopePlusTest {
 
         Assert.isTrue(
                 validateAgainstXSD(
-                    new ByteArrayInputStream(contentSigned),
-                    applicationContext.getResource ("classpath:xsd/OPI_FLUSSO_ORDINATIVI_V_1_6_0.xsd").getURL()
+                        new ByteArrayInputStream(contentSigned),
+                        applicationContext.getResource("classpath:xsd/OPI_FLUSSO_ORDINATIVI_V_1_6_0.xsd").getURL()
                 )
         );
         return new ByteArrayInputStream(contentSigned);

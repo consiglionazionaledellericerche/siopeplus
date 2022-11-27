@@ -75,49 +75,32 @@ import java.util.zip.ZipOutputStream;
 public class OrdinativiSiopePlusService extends CommonsSiopePlusService {
     private transient static final Logger logger = LoggerFactory.getLogger(OrdinativiSiopePlusService.class);
 
-    @Value("${siopeplus.url.flusso}")
-    public String urlFlusso;
-    @Value("${siopeplus.url.flusso.ack}")
-    public String urlACK;
-    @Value("${siopeplus.url.flusso.esito}")
-    public String urlEsito;
-    @Value("${siopeplus.url.esitoapplicativo}")
-    private String urlEsitoApplicativo;
+    private final String a2a;
 
-    private String a2a;
+    private final String uniuo;
+    public final String urlFlusso;
+    public final String urlACK;
+    public final String urlEsito;
+    private final String urlEsitoApplicativo;
 
-    private String uniuo;
 
     public String getA2a() {
         return a2a;
-    }
-
-    public void setA2a(String a2a) {
-        this.a2a = a2a;
     }
 
     public String getUniuo() {
         return uniuo;
     }
 
-    public void setUniuo(String uniuo) {
-        this.uniuo = uniuo;
-    }
 
-    private void resolveUrl(String a2a, String uniuo){
-        this.urlACK=this.urlACK.replace("${siopeplus.codice.a2a}",a2a).replace("${siopeplus.codice.uni.uo}",uniuo);
-        this.urlFlusso=this.urlFlusso.replace("${siopeplus.codice.a2a}",a2a).replace("${siopeplus.codice.uni.uo}",uniuo);
-        this.urlEsito=this.urlEsitoApplicativo.replace("${siopeplus.codice.a2a}",a2a).replace("${siopeplus.codice.uni.uo}",uniuo);
-        this.urlEsitoApplicativo=this.urlEsitoApplicativo.replace("${siopeplus.codice.a2a}",a2a).replace("${siopeplus.codice.uni.uo}",uniuo);
-    }
 
-    public OrdinativiSiopePlusService(String a2a, String uniuo) {
+    public OrdinativiSiopePlusService(String a2a, String uniuo, String urlFlusso, String urlACK, String urlEsito, String urlEsitoApplicativo) {
         this.a2a = a2a;
         this.uniuo = uniuo;
-    }
-    @PostConstruct
-    private void resolveUrl(){
-        resolveUrl(this.a2a,this.uniuo);
+        this.urlFlusso = urlFlusso;
+        this.urlACK = urlACK;
+        this.urlEsito = urlEsito;
+        this.urlEsitoApplicativo = urlEsitoApplicativo;
     }
     public String getURL(Esito esito) {
         switch (esito) {
