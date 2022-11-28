@@ -161,12 +161,13 @@ public class OrdinativiSiopePlusTest {
     @Test
     @Ignore
     public void postFLUSSO() throws JAXBException, IOException, DatatypeConfigurationException, ArubaSignServiceException, SIOPEPlusServiceUnavailable, SIOPEPlusServiceNotInstantiated {
-        final InputStream inputStream = generaFlusso();
-        final Risultato risultato = ordinativiSiopePlusFactory.getOrdinativiSiopePlusService("BT").postFlusso(inputStream);
+        final OrdinativiSiopePlusService bt = ordinativiSiopePlusFactory.getOrdinativiSiopePlusService("BT");
+        final InputStream inputStream = generaFlusso(bt.getA2a(), bt.getUniuo());
+        final Risultato risultato = bt.postFlusso(inputStream);
         Assert.notNull(risultato);
     }
 
-    private InputStream generaFlusso() throws JAXBException, IOException, DatatypeConfigurationException, ArubaSignServiceException {
+    private InputStream generaFlusso(String a2a, String uniuo) throws JAXBException, IOException, DatatypeConfigurationException, ArubaSignServiceException {
 
         LocalDateTime date = LocalDateTime.now();
 
@@ -175,10 +176,10 @@ public class OrdinativiSiopePlusTest {
 
         final CtTestataFlusso testataFlusso = objectFactory.createCtTestataFlusso();
         testataFlusso.setCodiceABIBT("01005");
-        testataFlusso.setRiferimentoEnte(environment.getProperty("siopeplus.codice.a2a"));
+        testataFlusso.setRiferimentoEnte(a2a);
         testataFlusso.setIdentificativoFlusso(LocalDateTime.now().getYear() + "-TEST-" + LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + "-I");
         testataFlusso.setDataOraCreazioneFlusso(DatatypeFactory.newInstance().newXMLGregorianCalendar(formatterTime.format(date)));
-        testataFlusso.setCodiceEnte(environment.getProperty("siopeplus.codice.uni.uo"));
+        testataFlusso.setCodiceEnte(uniuo);
         testataFlusso.setCodiceEnteBT(environment.getProperty("siopeplus.codice.ente.bt"));
         testataFlusso.setCodiceTramiteEnte(environment.getProperty("siopeplus.codice.tramite.ente"));
         testataFlusso.setCodiceTramiteBT(environment.getProperty("siopeplus.codice.tramite.ente.bt"));

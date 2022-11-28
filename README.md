@@ -15,19 +15,22 @@
   </a>
 </p>
 
-## MAVEN build parameter
-|Nome|Variabile d'ambiente|Descrizione|
-|---|---|---|
-|siopeplus.codice.a2a|SIOPEPLUS_CODICE_A2A|La credenziale A2A è un codice alfanumerico nella forma A2A-<123456789>
-|siopeplus.codice.uni.uo|SIOPEPLUS_CODICE_UNI_UO|Codice univoco ufficio presente in [Indice PA](https://www.indicepa.gov.it/public-services/opendata-read-service.php??dstype=FS&filename=amministrazioni.txt)
-|siopeplus.codice.ente.bt|SIOPEPLUS_CODICE_ENTE_BT|Codice ente concordato con l'istituto cassiere
-|siopeplus.codice.tramite.ente|SIOPEPLUS_CODICE_TRAMITE_ENTE|codice utenza applicativa A2A del Tramite PA mittente (se l’Ente si avvale di Tramite) ovvero della PA mittente
-|siopeplus.codice.tramite.ente.bt|SIOPEPLUS_CODICE_TRAMITE_ENTE_BT|codice utenza applicativa A2A del Tramite BT destinatario (se la BT si avvale di Tramite) ovvero della BT destinataria 
-|siopeplus.certificate.password|SIOPEPLUS_CERTIFICATE_PASSWORD|Password del certificato caricato in ambiente di [Collaudo SIOPE+](https://certregistration.siopeplus.it)
-|siopeplus.certificate.path|SIOPEPLUS_CERTIFICATE_PATH|Path del certificato PKS può assumere i valori `classpath:/cert.p12` `file:/etc/cert.p12`
-|sign.username|SIGN_USERNAME|Nome utente per la firma remota del flusso da inviare alla piattaforma SIOPE+
-|sign.password|SIGN_PASSWORD|Password per la firma remota del flusso da inviare alla piattaforma SIOPE+
-|sign.otp|SIGN_OTP|OTP per la firma remota del flusso da inviare alla piattaforma SIOPE+
+## Environment variable
+| Nome                             | Variabile d'ambiente             |Descrizione|
+|----------------------------------|----------------------------------|---|
+| siopeplus.base_url               | SIOPEPLUS_BASE_URL               |La URL di base per il servizio i.e. https://certa2a.siopeplus.it 
+| siopeplus.vAPI                   | SIOPEPLUS_VAPI                   |La versione delle API i.e. v1 
+| siopeplus.endpoints              | SIOPEPLUS_ENDPOINTS              |Lista degli endpoint separati da "," i.e. BT,BI
+| siopeplus.endpoint.BT.a2a        | SIOPEPLUS_ENDPOINT_BT_A2A        |La credenziale A2A è un codice alfanumerico nella forma A2A-<123456789>
+| siopeplus.endpoint.BT.uniuo      | SIOPEPLUS_ENDPOINT_BT_UNIUO      |Codice univoco ufficio presente in [Indice PA](https://www.indicepa.gov.it/public-services/opendata-read-service.php??dstype=FS&filename=amministrazioni.txt)
+| siopeplus.codice.ente.bt         | SIOPEPLUS_CODICE_ENTE_BT         |Codice ente concordato con l'istituto cassiere
+| siopeplus.codice.tramite.ente    | SIOPEPLUS_CODICE_TRAMITE_ENTE    |codice utenza applicativa A2A del Tramite PA mittente (se l’Ente si avvale di Tramite) ovvero della PA mittente
+| siopeplus.codice.tramite.ente.bt | SIOPEPLUS_CODICE_TRAMITE_ENTE_BT |codice utenza applicativa A2A del Tramite BT destinatario (se la BT si avvale di Tramite) ovvero della BT destinataria 
+| siopeplus.certificate.password   | SIOPEPLUS_CERTIFICATE_PASSWORD   |Password del certificato caricato in ambiente di [Collaudo SIOPE+](https://certregistration.siopeplus.it)
+| siopeplus.certificate.path       | SIOPEPLUS_CERTIFICATE_PATH       |Path del certificato PKS può assumere i valori `classpath:/cert.p12` `file:/etc/cert.p12`
+| sign.username                    | SIGN_USERNAME                    |Nome utente per la firma remota del flusso da inviare alla piattaforma SIOPE+
+| sign.password                    | SIGN_PASSWORD                    |Password per la firma remota del flusso da inviare alla piattaforma SIOPE+
+| sign.otp                         | SIGN_OTP                         |OTP per la firma remota del flusso da inviare alla piattaforma SIOPE+
 
 
 
