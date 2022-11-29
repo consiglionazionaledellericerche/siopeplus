@@ -21,15 +21,15 @@ public class OrdinativiSiopePlusFactory {
     @PostConstruct
     private void createService() {
         endpoints.stream().forEach(s -> {
-            final String endpint = CommonsSiopePlusService.PREFIX.concat(".").concat(s).concat(".");
+            final String endpoint = CommonsSiopePlusService.PREFIX.concat(".").concat(s).concat(".");
             ordinantiviSiopeServices.put(s, (OrdinativiSiopePlusService) appCtx.getBean(
                     "ordinativiSiopePlusService",
-                    appCtx.getEnvironment().getProperty(endpint.concat("a2a")),
-                    appCtx.getEnvironment().getProperty(endpint.concat("uniuo")),
-                    appCtx.getEnvironment().getProperty(endpint.concat("flusso")),
-                    appCtx.getEnvironment().getProperty(endpint.concat("ack")),
-                    appCtx.getEnvironment().getProperty(endpint.concat("esitoflusso")),
-                    appCtx.getEnvironment().getProperty(endpint.concat("esitoapplicativo"))
+                    appCtx.getEnvironment().getProperty(endpoint.concat("a2a")),
+                    appCtx.getEnvironment().getProperty(endpoint.concat("uniuo")),
+                    appCtx.getEnvironment().getProperty(endpoint.concat("flusso")),
+                    appCtx.getEnvironment().getProperty(endpoint.concat("ack")),
+                    appCtx.getEnvironment().getProperty(endpoint.concat("esitoflusso")),
+                    appCtx.getEnvironment().getProperty(endpoint.concat("esitoapplicativo"))
             ));
         });
     }
