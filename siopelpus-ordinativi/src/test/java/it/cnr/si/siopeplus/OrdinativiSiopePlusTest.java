@@ -159,7 +159,6 @@ public class OrdinativiSiopePlusTest {
     }
 
     @Test
-    @Ignore
     public void postFLUSSO() throws JAXBException, IOException, DatatypeConfigurationException, ArubaSignServiceException, SIOPEPlusServiceUnavailable, SIOPEPlusServiceNotInstantiated {
         final OrdinativiSiopePlusService bt = ordinativiSiopePlusFactory.getOrdinativiSiopePlusService("BT");
         final InputStream inputStream = generaFlusso(bt.getA2a(), bt.getUniuo());
@@ -284,7 +283,7 @@ public class OrdinativiSiopePlusTest {
 
         ArubaSignServiceClient client = new ArubaSignServiceClient();
         client.setProps(Stream.generate(environment.getPropertySources().iterator()::next)
-                .filter(propertySource -> propertySource.getName().contains("application-test.yml"))
+                .filter(propertySource -> propertySource.getName().contains("application-test.properties"))
                 .findAny()
                 .map(PropertySource::getSource)
                 .filter(Properties.class::isInstance)
