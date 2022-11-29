@@ -53,6 +53,7 @@ public abstract class CommonsSiopePlusService {
     protected static final String APPLICATION_ZIP = "application/zip";
     protected static final String  APPLICATION_JSON_UTF8 = "application/json;charset=UTF-8";
     public static final int TOO_MANY_REQUEST = 429;
+    public static final String PREFIX = "siopeplus.endpoint";
 
     private transient static final Logger logger = LoggerFactory.getLogger(CommonsSiopePlusService.class);
     protected static final String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS";

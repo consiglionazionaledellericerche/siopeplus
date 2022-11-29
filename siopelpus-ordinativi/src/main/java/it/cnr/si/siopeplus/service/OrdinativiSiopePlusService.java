@@ -32,10 +32,18 @@ import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.EmbeddedValueResolverAware;
+import org.springframework.context.annotation.Scope;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.PropertyPlaceholderHelper;
+import org.springframework.util.StringValueResolver;
 import org.xml.sax.SAXException;
 
+import javax.annotation.PostConstruct;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -62,21 +70,38 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 @Service
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class OrdinativiSiopePlusService extends CommonsSiopePlusService {
     private transient static final Logger logger = LoggerFactory.getLogger(OrdinativiSiopePlusService.class);
 
+    private final String a2a;
 
-    @Value("${siopeplus.url.flusso}")
-    public String urlFlusso;
-    @Value("${siopeplus.url.flusso.ack}")
-    public String urlACK;
-    @Value("${siopeplus.url.flusso.esito}")
-    public String urlEsito;
-    @Value("${siopeplus.url.esitoapplicativo}")
-    public String urlEsitoApplicativo;
+    private final String uniuo;
+    public final String urlFlusso;
+    public final String urlACK;
+    public final String urlEsito;
+    private final String urlEsitoApplicativo;
 
+
+    public String getA2a() {
+        return a2a;
+    }
+
+    public String getUniuo() {
+        return uniuo;
+    }
+
+
+
+    public OrdinativiSiopePlusService(String a2a, String uniuo, String urlFlusso, String urlACK, String urlEsito, String urlEsitoApplicativo) {
+        this.a2a = a2a;
+        this.uniuo = uniuo;
+        this.urlFlusso = urlFlusso;
+        this.urlACK = urlACK;
+        this.urlEsito = urlEsito;
+        this.urlEsitoApplicativo = urlEsitoApplicativo;
+    }
     public String getURL(Esito esito) {
         switch (esito) {
             case ACK:

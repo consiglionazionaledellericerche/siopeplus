@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -49,9 +50,16 @@ import java.util.Optional;
 @Service
 public class GiornaleDiCassaSiopePlusService extends CommonsSiopePlusService{
     private transient static final Logger logger = LoggerFactory.getLogger(GiornaleDiCassaSiopePlusService.class);
-    @Value("${siopeplus.url.giornaledicassa}")
-    public String urlGiornaleDiCassa;
+    private final String a2a;
 
+    private final String uniuo;
+    private final String urlGiornaleDiCassa;
+
+    public GiornaleDiCassaSiopePlusService(String a2a, String uniuo, String urlGiornaleDiCassa) {
+        this.a2a = a2a;
+        this.uniuo = uniuo;
+        this.urlGiornaleDiCassa = urlGiornaleDiCassa;
+    }
     public Lista getListaMessaggi(LocalDateTime dataDa, LocalDateTime dataA, Boolean download, Integer pagina) {
         CloseableHttpClient client = null;
         try {
