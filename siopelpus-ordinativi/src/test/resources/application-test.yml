@@ -30,8 +30,8 @@ siopeplus:
       uniuo: UF378V
       base_url: ${siopeplus.base_url}/${siopeplus.endpoint.BI.a2a}/PA/${siopeplus.endpoint.BI.uniuo}
       flusso: ${siopeplus.endpoint.BI.base_url}/flusso/
-      ack: ${siopeplus.endpoint.BI.flusso}/ack/
-      esitoflusso: ${siopeplus.endpoint.BI.flusso}/esitoflusso/
+      ack: ${siopeplus.endpoint.BI.flusso}ack/
+      esitoflusso: ${siopeplus.endpoint.BI.flusso}esitoflusso/
       esitoapplicativo: ${siopeplus.endpoint.BI.base_url}/esitoapplicativo/
       giornaledicassa: ${siopeplus.endpoint.BI.base_url}/giornale/
     BT:
@@ -39,7 +39,7 @@ siopeplus:
       uniuo: 0QULCB
       base_url: ${siopeplus.base_url}/${siopeplus.endpoint.BT.a2a}/PA/${siopeplus.endpoint.BT.uniuo}
       flusso: ${siopeplus.endpoint.BT.base_url}/flusso/
-      ack: ${siopeplus.endpoint.BT.flusso}/ack/
-      esitoflusso: ${siopeplus.endpoint.BT.flusso}/esitoflusso/
+      ack: ${siopeplus.endpoint.BT.flusso}ack/
+      esitoflusso: ${siopeplus.endpoint.BT.flusso}esitoflusso/
       esitoapplicativo: ${siopeplus.endpoint.BT.base_url}/esitoapplicativo/
       giornaledicassa: ${siopeplus.endpoint.BT.base_url}/giornale/
