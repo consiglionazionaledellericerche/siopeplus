@@ -11,7 +11,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Configuration
-public class OrdinativiSiopePlusFactory {
+    public class OrdinativiSiopePlusFactory {
     @Value("#{'${siopeplus.endpoints}'.split(',')}")
     public List<String> endpoints;
     @Autowired

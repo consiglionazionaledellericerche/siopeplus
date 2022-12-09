@@ -32,6 +32,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -48,6 +50,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class GiornaleDiCassaSiopePlusService extends CommonsSiopePlusService{
     private transient static final Logger logger = LoggerFactory.getLogger(GiornaleDiCassaSiopePlusService.class);
     private final String a2a;
