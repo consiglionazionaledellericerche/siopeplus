@@ -13,8 +13,8 @@ variables:
       -Dnexus.url=$NEXUS_URL
       -Dnexus.login=$NEXUS_USERNAME
       -Dnexus.pwd=$NEXUS_PASSWORD
-      -Dcodice.a2a=$CODICE_A2A
-      -Dcodice.uni.uo=$CODICE_UNI_UO
+      -Dsiopeplus.endpoint.BT.a2a=$CODICE_A2A
+      -Dsiopeplus.endpoint.BT.uniuo=$CODICE_UNI_UO
       -Dcodice.ente.bt=$CODICE_ENTE_BT
       -Dcodice.tramite.ente=$CODICE_TRAMITE_ENTE
       -Dcodice.tramite.ente.bt=$CODICE_TRAMITE_ENTE_BT
