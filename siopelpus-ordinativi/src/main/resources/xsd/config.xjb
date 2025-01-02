@@ -23,12 +23,12 @@
                 <jaxb:class ref="MessaggiEsitoApplicativo"/>
             </jaxb:bindings>
         </jaxb:bindings>
-        <jaxb:bindings schemaLocation="OPI_FLUSSO_ORDINATIVI_V_1_6_1.xsd" >
+        <jaxb:bindings schemaLocation="OPI_FLUSSO_ORDINATIVI_V_1_7_1.xsd" >
             <jaxb:bindings node="//xs:element[@name='codice_identificativo_ente']">
                 <jaxb:class ref="String"/>
             </jaxb:bindings>
         </jaxb:bindings>
-        <jaxb:bindings schemaLocation="OPI_FLUSSO_ORDINATIVI_V_1_6_1.xsd" >
+        <jaxb:bindings schemaLocation="OPI_FLUSSO_ORDINATIVI_V_1_7_1.xsd" >
             <jaxb:bindings node="//xs:element[@name='numero_avviso']">
                 <jaxb:class ref="String"/>
             </jaxb:bindings>
