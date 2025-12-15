@@ -25,14 +25,18 @@
 
 package it.cnr.si.siopeplus;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import it.siopeplus.CtTestataMessaggio;
 import it.siopeplus.SignatureType;
-import org.jvnet.jaxb2_commons.lang.JAXBToStringStrategy;
-import org.jvnet.jaxb2_commons.lang.ToString2;
-import org.jvnet.jaxb2_commons.lang.ToStringStrategy2;
-import org.jvnet.jaxb2_commons.locator.ObjectLocator;
-
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.annotation.*;
+import org.jvnet.jaxb.lang.JAXBToStringStrategy;
+import org.jvnet.jaxb.lang.ToString;
+import org.jvnet.jaxb.lang.ToStringStrategy;
+import org.jvnet.jaxb.locator.ObjectLocator;
 
 
 /**
@@ -68,7 +72,7 @@ import javax.xml.bind.annotation.*;
     "esercizio"
 })
 @XmlRootElement(name = "messaggio_ricezione_flusso")
-public class MessaggioRicezioneFlusso implements ToString2, EsitoFlusso
+public class MessaggioRicezioneFlusso implements Serializable, ToString
 {
 
     @XmlElement(name = "testata_messaggio", required = true)
@@ -222,21 +226,24 @@ public class MessaggioRicezioneFlusso implements ToString2, EsitoFlusso
         this.id = value;
     }
 
+    @Override
     public String toString() {
-        final ToStringStrategy2 strategy = JAXBToStringStrategy.INSTANCE;
+        final ToStringStrategy strategy = JAXBToStringStrategy.getInstance();
         final StringBuilder buffer = new StringBuilder();
         append(null, buffer, strategy);
         return buffer.toString();
     }
 
-    public StringBuilder append(ObjectLocator locator, StringBuilder buffer, ToStringStrategy2 strategy) {
+    @Override
+    public StringBuilder append(ObjectLocator locator, StringBuilder buffer, ToStringStrategy strategy) {
         strategy.appendStart(locator, this, buffer);
         appendFields(locator, buffer, strategy);
         strategy.appendEnd(locator, this, buffer);
         return buffer;
     }
 
-    public StringBuilder appendFields(ObjectLocator locator, StringBuilder buffer, ToStringStrategy2 strategy) {
+    @Override
+    public StringBuilder appendFields(ObjectLocator locator, StringBuilder buffer, ToStringStrategy strategy) {
         {
             SignatureType theSignature;
             theSignature = this.getSignature();
@@ -270,7 +277,6 @@ public class MessaggioRicezioneFlusso implements ToString2, EsitoFlusso
         return buffer;
     }
 
-    @Override
     public boolean isRifiutato() {
         return false;
     }

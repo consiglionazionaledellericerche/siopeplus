@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Configuration
-    public class OrdinativiSiopePlusFactory {
+public class OrdinativiSiopePlusFactory {
     @Value("#{'${siopeplus.endpoints}'.split(',')}")
     public List<String> endpoints;
     @Autowired

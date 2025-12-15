@@ -22,25 +22,23 @@ import com.google.gson.GsonBuilder;
 import it.cnr.si.siopeplus.model.Lista;
 import it.cnr.si.siopeplus.model.MessaggioXML;
 import it.cnr.si.siopeplus.model.Parameter;
-import it.cnr.si.siopeplus.giornaledicassa.custom.ObjectFactory;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.HttpStatus;
+import org.apache.hc.core5.net.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -48,11 +46,12 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class GiornaleDiCassaSiopePlusService extends CommonsSiopePlusService{
-    private transient static final Logger logger = LoggerFactory.getLogger(GiornaleDiCassaSiopePlusService.class);
+public class GiornaleDiCassaSiopePlusService extends CommonsSiopePlusService {
+    private static final Logger logger = LoggerFactory.getLogger(GiornaleDiCassaSiopePlusService.class);
     private final String a2a;
 
     private final String uniuo;
@@ -63,6 +62,7 @@ public class GiornaleDiCassaSiopePlusService extends CommonsSiopePlusService{
         this.uniuo = uniuo;
         this.urlGiornaleDiCassa = urlGiornaleDiCassa;
     }
+
     public Lista getListaMessaggi(LocalDateTime dataDa, LocalDateTime dataA, Boolean download, Integer pagina) {
         CloseableHttpClient client = null;
         try {
@@ -79,14 +79,16 @@ public class GiornaleDiCassaSiopePlusService extends CommonsSiopePlusService{
             HttpGet httpGet = new HttpGet(builder.build());
             httpGet.setHeader("Accept", APPLICATION_JSON_UTF8);
 
-            final HttpResponse response = client.execute(httpGet);
-            if (!Optional.ofNullable(response).filter(httpResponse -> httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK).isPresent()) {
-                logger.error(response.getStatusLine().getReasonPhrase());
-                return new Lista();
+            try (CloseableHttpResponse response = client.execute(httpGet)) {
+                if (!Optional.ofNullable(response).filter(httpResponse -> httpResponse.getCode() == HttpStatus.SC_OK).isPresent()) {
+                    logger.error(response.getReasonPhrase());
+                    return new Lista();
+                }
+                Gson gson = new GsonBuilder().setDateFormat(pattern).create();
+                return gson.fromJson(IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8), Lista.class);
             }
-            Gson gson = new GsonBuilder().setDateFormat(pattern).create();
-            return gson.fromJson(IOUtils.toString(response.getEntity().getContent(), "UTF-8"), Lista.class);
-        } catch (URISyntaxException | KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException | UnrecoverableKeyException | KeyManagementException e) {
+        } catch (URISyntaxException | KeyStoreException | CertificateException | NoSuchAlgorithmException |
+                 IOException | UnrecoverableKeyException | KeyManagementException e) {
             throw new RuntimeException(e);
         } finally {
             Optional.ofNullable(client)
@@ -99,13 +101,14 @@ public class GiornaleDiCassaSiopePlusService extends CommonsSiopePlusService{
                     });
         }
     }
+
     @Override
     public <T> MessaggioXML<T> getLocation(String location, Class<T> clazz) {
         try {
             return getLocation(location, clazz, JAXBContext.newInstance(
                     it.siopeplus.giornaledicassa.ObjectFactory.class,
                     it.cnr.si.siopeplus.giornaledicassa.custom.ObjectFactory.class
-            ), 0);
+            ), new AtomicInteger(0));
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }

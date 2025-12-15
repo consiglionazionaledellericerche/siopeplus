@@ -27,7 +27,7 @@ package it.cnr.si.siopeplus.giornaledicassa.custom;
 
 import it.cnr.si.siopeplus.giornaledicassa.FlussoGiornaleDiCassa;
 
-import javax.xml.bind.annotation.XmlRegistry;
+import jakarta.xml.bind.annotation.XmlRegistry;
 import javax.xml.namespace.QName;
 
 

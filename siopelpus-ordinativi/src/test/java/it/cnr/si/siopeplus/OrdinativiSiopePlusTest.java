@@ -41,9 +41,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
 import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.transform.stream.StreamSource;
@@ -107,14 +107,14 @@ public class OrdinativiSiopePlusTest {
                 null,
                 true,
                 null);
-        Assert.notNull(lista);
+        Assert.notNull(lista,"La lista è vuota");
         Optional.ofNullable(lista)
                 .orElse(Collections.emptyList())
                 .stream()
                 .forEach(risultato -> {
                     final MessaggioAckSiope messaggioAckSiope =
                             ordinativiSiopePlusService.getLocation(risultato.getLocation(), MessaggioAckSiope.class).getObject();
-                    Assert.notNull(messaggioAckSiope);
+                    Assert.notNull(messaggioAckSiope,"Il messaggio è vuoto");
                 });
     }
 
@@ -127,14 +127,14 @@ public class OrdinativiSiopePlusTest {
                 null,
                 true,
                 null);
-        Assert.notNull(lista);
+        Assert.notNull(lista,"La lista è vuota");
         Optional.ofNullable(lista)
                 .orElse(Collections.emptyList())
                 .stream()
                 .forEach(risultato -> {
                     final MessaggioRicezioneFlusso messaggioRicezioneFlusso =
                             ordinativiSiopePlusService.getLocation(risultato.getLocation(), MessaggioRicezioneFlusso.class).getObject();
-                    Assert.notNull(messaggioRicezioneFlusso);
+                    Assert.notNull(messaggioRicezioneFlusso,"Il messaggio è vuoto");
                 });
     }
 
@@ -147,14 +147,14 @@ public class OrdinativiSiopePlusTest {
                 null,
                 true,
                 null);
-        Assert.notNull(lista);
+        Assert.notNull(lista,"La lista è vuota");
         Optional.ofNullable(lista)
                 .orElse(Collections.emptyList())
                 .stream()
                 .forEach(risultato -> {
                     final MessaggiEsitoApplicativo messaggiEsitoApplicativo =
                             ordinativiSiopePlusService.getLocation(risultato.getLocation(), MessaggiEsitoApplicativo.class).getObject();
-                    Assert.notNull(messaggiEsitoApplicativo);
+                    Assert.notNull(messaggiEsitoApplicativo,"Il messaggio è vuoto");
                 });
     }
 
@@ -163,7 +163,7 @@ public class OrdinativiSiopePlusTest {
         final OrdinativiSiopePlusService bt = ordinativiSiopePlusFactory.getOrdinativiSiopePlusService("BT");
         final InputStream inputStream = generaFlusso(bt.getA2a(), bt.getUniuo());
         final Risultato risultato = bt.postFlusso(inputStream);
-        Assert.notNull(risultato);
+        Assert.notNull(risultato,"Il messaggio è vuoto");
     }
 
     private InputStream generaFlusso(String a2a, String uniuo) throws JAXBException, IOException, DatatypeConfigurationException, ArubaSignServiceException {
@@ -296,7 +296,7 @@ public class OrdinativiSiopePlusTest {
                         new ByteArrayInputStream(contentSigned),
                         applicationContext.getResource("classpath:xsd/OPI_FLUSSO_ORDINATIVI_V_1_6_0.xsd").getURL()
                 )
-        );
+                ,"XSD non valido!");
         return new ByteArrayInputStream(contentSigned);
     }
 }

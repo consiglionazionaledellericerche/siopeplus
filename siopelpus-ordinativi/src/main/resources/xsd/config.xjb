@@ -1,37 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jaxb:bindings xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+<jaxb:bindings xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb"
                xmlns:xs="http://www.w3.org/2001/XMLSchema"
-               xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
-               xmlns:simplify="http://jaxb2-commons.dev.java.net/basic/simplify" extensionBindingPrefixes="simplify"
+               xmlns:xjc="https://jakarta.ee/xml/ns/jaxb/xjc"
+               xmlns:simplify="http://jaxb2-commons.dev.java.net/basic/simplify"
+               extensionBindingPrefixes="simplify"
                jaxb:extensionBindingPrefixes="xjc"
-               version="2.0">
-        <jaxb:globalBindings>
-            <xjc:serializable uid="-1"/>
-        </jaxb:globalBindings>
-        <jaxb:bindings schemaLocation="OPI_MSG_RICEZIONE_FLUSSO_V_1_6_1.xsd" >
-            <jaxb:bindings node="//xs:element[@name='messaggio_ricezione_flusso']">
-              <jaxb:class ref="MessaggioRicezioneFlusso"/>
-            </jaxb:bindings>
+               version="3.0">
+
+    <jaxb:globalBindings>
+        <jaxb:serializable uid="-1"/>
+    </jaxb:globalBindings>
+
+    <jaxb:bindings schemaLocation="OPI_MSG_RICEZIONE_FLUSSO_V_1_6_1.xsd">
+        <jaxb:bindings node="//xs:element[@name='messaggio_ricezione_flusso']">
+            <jaxb:class ref="it.siopeplus.MessaggioRicezioneFlusso"/>
         </jaxb:bindings>
-        <jaxb:bindings schemaLocation="OPI_MSG_RIFIUTO_FLUSSO_V_1_6_1.xsd" >
-            <jaxb:bindings node="//xs:element[@name='messaggio_rifiuto_flusso']">
-                <jaxb:class ref="MessaggioRifiutoFlusso"/>
-            </jaxb:bindings>
+    </jaxb:bindings>
+
+    <jaxb:bindings schemaLocation="OPI_MSG_RIFIUTO_FLUSSO_V_1_6_1.xsd">
+        <jaxb:bindings node="//xs:element[@name='messaggio_rifiuto_flusso']">
+            <jaxb:class ref="it.siopeplus.MessaggioRifiutoFlusso"/>
         </jaxb:bindings>
-        <jaxb:bindings schemaLocation="OPI_MSG_ESITO_APPLICATIVO_V_1_6_1.xsd" >
-            <jaxb:bindings node="//xs:element[@name='messaggi_esito_applicativo']">
-                <jaxb:class ref="MessaggiEsitoApplicativo"/>
-            </jaxb:bindings>
+    </jaxb:bindings>
+
+    <jaxb:bindings schemaLocation="OPI_MSG_ESITO_APPLICATIVO_V_1_6_1.xsd">
+        <jaxb:bindings node="//xs:element[@name='messaggi_esito_applicativo']">
+            <jaxb:class ref="it.siopeplus.MessaggiEsitoApplicativo"/>
         </jaxb:bindings>
-        <jaxb:bindings schemaLocation="OPI_FLUSSO_ORDINATIVI_V_1_7_1.xsd" >
-            <jaxb:bindings node="//xs:element[@name='codice_identificativo_ente']">
-                <jaxb:class ref="String"/>
-            </jaxb:bindings>
+    </jaxb:bindings>
+
+    <jaxb:bindings schemaLocation="OPI_FLUSSO_ORDINATIVI_V_1_7_1.xsd">
+        <jaxb:bindings node="//xs:element[@name='codice_identificativo_ente']">
+            <jaxb:property>
+                <jaxb:baseType name="java.lang.String"/>
+            </jaxb:property>
         </jaxb:bindings>
-        <jaxb:bindings schemaLocation="OPI_FLUSSO_ORDINATIVI_V_1_7_1.xsd" >
-            <jaxb:bindings node="//xs:element[@name='numero_avviso']">
-                <jaxb:class ref="String"/>
-            </jaxb:bindings>
+        <jaxb:bindings node="//xs:element[@name='numero_avviso']">
+            <jaxb:property>
+                <jaxb:baseType name="java.lang.String"/>
+            </jaxb:property>
         </jaxb:bindings>
+    </jaxb:bindings>
 
 </jaxb:bindings>

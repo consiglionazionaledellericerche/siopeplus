@@ -1,23 +1,23 @@
 package it.cnr.si.siopeplus.service;
 
 import it.cnr.si.siopeplus.exception.SIOPEPlusServiceNotInstantiated;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class GiornaleDiCassaSiopePlusFactory {
 
+    private final Map<String, GiornaleDiCassaSiopePlusService> giornaleDiCassaSiopePlusServices = new HashMap<String, GiornaleDiCassaSiopePlusService>();
     @Value("#{'${siopeplus.endpoints}'.split(',')}")
     public List<String> endpoints;
     @Autowired
     private ApplicationContext appCtx;
-    private final Map<String, GiornaleDiCassaSiopePlusService> giornaleDiCassaSiopePlusServices = new HashMap<String, GiornaleDiCassaSiopePlusService>();
 
     @PostConstruct
     private void createService() {

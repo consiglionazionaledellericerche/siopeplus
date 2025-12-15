@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!-- SCHEMA Definizioni dati comuni Versione 1.5.1.1 (OPI, Messaggi, GdC, DL) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
-<!--    -->
-<!-- Definizione Tipi semplici          -->
+  <!--    -->
+  <!-- Definizione Tipi semplici          -->
   <xs:simpleType name="stIdFlussoBT">
     <xs:annotation>
       <xs:documentation>Codice alfanumerico attribuito univocamente al flusso della BT</xs:documentation>
@@ -101,7 +101,7 @@
     </xs:restriction>
   </xs:simpleType>
   <!-- Definizione Tipi semplici (fine)   -->
-<!-- Definizione Tipi complessi         -->
+  <!-- Definizione Tipi complessi         -->
   <xs:complexType name="ctTestata_messaggio">
     <xs:annotation>
       <xs:documentation>Testata Comune per tutti i flussi</xs:documentation>
@@ -161,5 +161,5 @@
     </xs:sequence>
   </xs:complexType>
   <!--    -->
-<!-- Definizione Tipi complessi (fine)  -->
+  <!-- Definizione Tipi complessi (fine)  -->
 </xs:schema>

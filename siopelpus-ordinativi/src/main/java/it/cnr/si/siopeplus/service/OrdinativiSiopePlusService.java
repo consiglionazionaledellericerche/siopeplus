@@ -23,30 +23,23 @@ import it.cnr.si.siopeplus.exception.SIOPEPlusServiceUnavailable;
 import it.cnr.si.siopeplus.custom.ObjectFactory;
 import it.cnr.si.siopeplus.model.*;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.InputStreamEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.HttpStatus;
+import org.apache.hc.core5.http.io.entity.InputStreamEntity;
+import org.apache.hc.core5.net.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.EmbeddedValueResolverAware;
 import org.springframework.context.annotation.Scope;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.PropertyPlaceholderHelper;
-import org.springframework.util.StringValueResolver;
 import org.xml.sax.SAXException;
 
-import javax.annotation.PostConstruct;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
 import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -68,21 +61,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class OrdinativiSiopePlusService extends CommonsSiopePlusService {
     private transient static final Logger logger = LoggerFactory.getLogger(OrdinativiSiopePlusService.class);
 
     private final String a2a;
-
     private final String uniuo;
     public final String urlFlusso;
     public final String urlACK;
     public final String urlEsito;
     private final String urlEsitoApplicativo;
-
 
     public String getA2a() {
         return a2a;
@@ -92,8 +85,6 @@ public class OrdinativiSiopePlusService extends CommonsSiopePlusService {
         return uniuo;
     }
 
-
-
     public OrdinativiSiopePlusService(String a2a, String uniuo, String urlFlusso, String urlACK, String urlEsito, String urlEsitoApplicativo) {
         this.a2a = a2a;
         this.uniuo = uniuo;
@@ -102,6 +93,7 @@ public class OrdinativiSiopePlusService extends CommonsSiopePlusService {
         this.urlEsito = urlEsito;
         this.urlEsitoApplicativo = urlEsitoApplicativo;
     }
+
     public String getURL(Esito esito) {
         switch (esito) {
             case ACK:
@@ -133,20 +125,20 @@ public class OrdinativiSiopePlusService extends CommonsSiopePlusService {
             httpPost.setHeader("Content-Type", APPLICATION_ZIP);
             httpPost.setHeader("Accept", APPLICATION_JSON_UTF8);
 
-            final InputStreamEntity inputStreamEntity = new InputStreamEntity(inputZIP);
-            inputStreamEntity.setChunked(true);
-            inputStreamEntity.setContentType(APPLICATION_ZIP);
+            final InputStreamEntity inputStreamEntity = new InputStreamEntity(inputZIP, null);
             httpPost.setEntity(inputStreamEntity);
+            httpPost.setHeader("Transfer-Encoding", "chunked");
 
-            final HttpResponse response = client.execute(httpPost);
-            if (!Optional.ofNullable(response).filter(httpResponse -> httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED).isPresent()) {
-                if (response.getStatusLine().getStatusCode() == HttpStatus.SC_SERVICE_UNAVAILABLE)
-                    throw new SIOPEPlusServiceUnavailable();
-                logger.error(response.getStatusLine().getReasonPhrase());
-                throw new RuntimeException("Cannot send flusso error code: " + response.getStatusLine().getStatusCode());
+            try (CloseableHttpResponse response = client.execute(httpPost)) {
+                if (response.getCode() != HttpStatus.SC_CREATED) {
+                    if (response.getCode() == HttpStatus.SC_SERVICE_UNAVAILABLE)
+                        throw new SIOPEPlusServiceUnavailable();
+                    logger.error(response.getReasonPhrase());
+                    throw new RuntimeException("Cannot send flusso error code: " + response.getCode());
+                }
+                Gson gson = new GsonBuilder().setDateFormat(pattern).create();
+                return gson.fromJson(IOUtils.toString(response.getEntity().getContent(), "UTF-8"), Risultato.class);
             }
-            Gson gson = new GsonBuilder().setDateFormat(pattern).create();
-            return gson.fromJson(IOUtils.toString(response.getEntity().getContent(), "UTF-8"), Risultato.class);
         } catch (URISyntaxException | KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException | UnrecoverableKeyException | KeyManagementException e) {
             throw new RuntimeException(e);
         } finally {
@@ -166,14 +158,14 @@ public class OrdinativiSiopePlusService extends CommonsSiopePlusService {
         final Lista listaMessaggi = getListaMessaggi(esito, dataDa, dataA, download, pagina, 0);
         risultatoList.addAll(
                 Optional.ofNullable(listaMessaggi)
-                    .flatMap(lista -> Optional.ofNullable(lista.getRisultati()))
-                    .orElse(Collections.emptyList())
+                        .flatMap(lista -> Optional.ofNullable(lista.getRisultati()))
+                        .orElse(Collections.emptyList())
         );
         if (listaMessaggi.getNumPagine() > 1) {
-            for (int i = 2; i < listaMessaggi.getNumPagine(); i++) {
+            for (int i = 2; i <= listaMessaggi.getNumPagine(); i++) {
                 risultatoList.addAll(
                         Optional.ofNullable(getListaMessaggi(esito, dataDa, dataA, download, i, 0))
-                        .flatMap(lista -> Optional.ofNullable(lista.getRisultati()))
+                                .flatMap(lista -> Optional.ofNullable(lista.getRisultati()))
                                 .orElse(Collections.emptyList())
                 );
             }
@@ -187,37 +179,38 @@ public class OrdinativiSiopePlusService extends CommonsSiopePlusService {
             client = getHttpClient();
             URIBuilder builder = new URIBuilder(getURL(esito));
             Optional.ofNullable(dataDa)
-                    .ifPresent(date -> builder.setParameter(getDataDa(esito), dataDa.format(formatter)));
+                    .ifPresent(date -> builder.addParameter(getDataDa(esito), dataDa.format(formatter)));
             Optional.ofNullable(dataA)
-                    .ifPresent(date -> builder.setParameter(getDataA(esito), dataA.format(formatter)));
+                    .ifPresent(date -> builder.addParameter(getDataA(esito), dataA.format(formatter)));
             Optional.ofNullable(download)
-                    .ifPresent(aBoolean -> builder.setParameter(Parameter.download.name(), aBoolean.toString()));
+                    .ifPresent(aBoolean -> builder.addParameter(Parameter.download.name(), aBoolean.toString()));
             Optional.ofNullable(pagina)
-                    .ifPresent(integer -> builder.setParameter(Parameter.pagina.name(), integer.toString()));
+                    .ifPresent(integer -> builder.addParameter(Parameter.pagina.name(), integer.toString()));
             final URI uri = builder.build();
             HttpGet httpGet = new HttpGet(uri);
             httpGet.setHeader("Accept", APPLICATION_JSON_UTF8);
 
-            final HttpResponse response = client.execute(httpGet);
-            if (!Optional.ofNullable(response).filter(httpResponse -> httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK).isPresent()) {
-                logger.error("ERROR SIOPE+ for LISTA MESSAGGI {} ITERATE {}", response.getStatusLine(), iterate);
-                if (response.getStatusLine().getStatusCode() == TOO_MANY_REQUEST) {
-                    try {
-                        TimeUnit.SECONDS.sleep(TIMEOUT);
-                        if (iterate < 10) {
-                            return getListaMessaggi(esito, dataDa, dataA, download, pagina, ++iterate);
-                        } else {
-                            logger.error("ERROR SIOPE+ CANNOT ITERATE THAN 10");
-                            return new Lista();
+            try (CloseableHttpResponse response = client.execute(httpGet)) {
+                if (response.getCode() != HttpStatus.SC_OK) {
+                    logger.error("ERROR SIOPE+ for LISTA MESSAGGI {} ITERATE {}", response.getReasonPhrase(), iterate);
+                    if (response.getCode() == TOO_MANY_REQUEST) {
+                        try {
+                            TimeUnit.SECONDS.sleep(TIMEOUT);
+                            if (iterate < 10) {
+                                return getListaMessaggi(esito, dataDa, dataA, download, pagina, ++iterate);
+                            } else {
+                                logger.error("ERROR SIOPE+ CANNOT ITERATE THAN 10");
+                                return new Lista();
+                            }
+                        } catch (InterruptedException e) {
+                            logger.error("ERROR SIOPE+ for LISTA MESSAGGI", e);
                         }
-                    } catch (InterruptedException e) {
-                        logger.error("ERROR SIOPE+ for LISTA MESSAGGI", e);
                     }
+                    throw new RuntimeException("Error connecting to " + uri + " with response code: " + response.getCode());
                 }
-                throw new RuntimeException("Error connecting to " + uri + " with resonse code: " + response.getStatusLine().getStatusCode());
+                Gson gson = new GsonBuilder().setDateFormat(pattern).create();
+                return gson.fromJson(IOUtils.toString(response.getEntity().getContent(), "UTF-8"), Lista.class);
             }
-            Gson gson = new GsonBuilder().setDateFormat(pattern).create();
-            return gson.fromJson(IOUtils.toString(response.getEntity().getContent(), "UTF-8"), Lista.class);
         } catch (URISyntaxException | KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException | UnrecoverableKeyException | KeyManagementException e) {
             throw new RuntimeException(e);
         } finally {
@@ -236,7 +229,7 @@ public class OrdinativiSiopePlusService extends CommonsSiopePlusService {
         try {
             return getLocation(location, clazz, JAXBContext.newInstance(
                     it.siopeplus.ObjectFactory.class,
-                    it.cnr.si.siopeplus.custom.ObjectFactory.class), 0);
+                    it.cnr.si.siopeplus.custom.ObjectFactory.class), new AtomicInteger(0));
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }
@@ -248,5 +241,4 @@ public class OrdinativiSiopePlusService extends CommonsSiopePlusService {
         Validator validator = schema.newValidator();
         validator.validate(new StreamSource(xml));
     }
-
 }

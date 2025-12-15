@@ -21,24 +21,26 @@ import it.cnr.si.siopeplus.model.Esito;
 import it.cnr.si.siopeplus.model.MessaggioXML;
 import it.cnr.si.siopeplus.model.Parameter;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.ssl.SSLContexts;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.core5.http.HttpStatus;
+import org.apache.hc.core5.net.URIBuilder;
+import org.apache.hc.core5.ssl.SSLContexts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.ssl.DefaultHostnameVerifier;
 
 import javax.net.ssl.SSLContext;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.security.*;
@@ -46,6 +48,7 @@ import java.security.cert.CertificateException;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -89,56 +92,59 @@ public abstract class CommonsSiopePlusService {
 
     public abstract <T extends Object> MessaggioXML<T> getLocation(String location, Class<T> clazz);
 
-    protected <T extends Object> MessaggioXML<T> getLocation(String location, Class<T> clazz, JAXBContext jc, Integer iterate) {
+    protected <T extends Object> MessaggioXML<T> getLocation(String location, Class<T> clazz, JAXBContext jc, final AtomicInteger iterate) {
         CloseableHttpClient client = null;
         try {
             client = getHttpClient();
             URIBuilder builder = new URIBuilder(location);
 
-            HttpGet httpGet = new HttpGet(builder.build());
-            httpGet.setHeader("Accept", APPLICATION_ZIP);
+            HttpGet request = new HttpGet(builder.build());
+            request.setHeader("Accept", APPLICATION_ZIP);
 
-            final HttpResponse response = client.execute(httpGet);
-            if (!Optional.ofNullable(response).filter(httpResponse -> httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK).isPresent()) {
-                logger.error("ERROR SIOPE+ for location {} iterate", response.getStatusLine(), iterate);
-                if (response.getStatusLine().getStatusCode() == TOO_MANY_REQUEST) {
-                    try {
-                        TimeUnit.SECONDS.sleep(TIMEOUT);
-                        if (iterate < 10) {
-                            return getLocation(location, clazz, jc, ++iterate);
-                        } else {
-                            logger.error("ERROR SIOPE+ CANNOT ITERATE THAN 10");
-                            throw new RuntimeException("ERROR SIOPE+ CANNOT ITERATE THAN 10");
+            return client.execute(request, response -> {
+                if (!Optional.ofNullable(response).filter(httpResponse -> httpResponse.getCode() == HttpStatus.SC_OK).isPresent()) {
+                    logger.error("ERROR SIOPE+ for location {} iterate {}", response.getCode(), iterate.get());
+                    if (response.getCode() == TOO_MANY_REQUEST) {
+                        try {
+                            TimeUnit.SECONDS.sleep(TIMEOUT);
+                            if (iterate.get() < 10) {
+                                return getLocation(location, clazz, jc, new AtomicInteger(iterate.getAndIncrement()));
+                            } else {
+                                logger.error("ERROR SIOPE+ CANNOT ITERATE THAN 10");
+                                throw new RuntimeException("ERROR SIOPE+ CANNOT ITERATE THAN 10");
+                            }
+                        } catch (InterruptedException e) {
+                            logger.error("ERROR SIOPE+ for location", e);
+                            throw new RuntimeException("ERROR SIOPE+ for location " + response.getCode());
                         }
-                    } catch (InterruptedException e) {
-                        logger.error("ERROR SIOPE+ for location", e);
-                        throw new RuntimeException("ERROR SIOPE+ for location " + response.getStatusLine());
+                    } else {
+                        throw new RuntimeException("ERROR SIOPE+ for location " + response.getCode());
                     }
                 } else {
-                    throw new RuntimeException("ERROR SIOPE+ for location " + response.getStatusLine());
+                    final InputStream content = response.getEntity().getContent();
+                    ZipInputStream zipInputStream = new ZipInputStream(content);
+                    final ZipEntry nextEntry = Optional.ofNullable(zipInputStream.getNextEntry())
+                            .orElseThrow(() -> new RuntimeException("Cannot download file from location: " + location));
+                    final String name = nextEntry.getName();
+                    final byte[] bytes = IOUtils.toByteArray(extractFileFromArchive(zipInputStream));
+                    try {
+                        final Unmarshaller unmarshaller = jc.createUnmarshaller();
+                        final T object = Optional.ofNullable(unmarshaller.unmarshal(new ByteArrayInputStream(bytes)))
+                                .map(jaxbElement -> {
+                                    try {
+                                        return (T) jaxbElement;
+                                    } catch (ClassCastException _ex) {
+                                        return null;
+                                    }
+                                })
+                                .orElse(null);
+                        return new MessaggioXML<T>(name, bytes, object);
+                    } catch (JAXBException _ex) {
+                        throw new RuntimeException(_ex);
+                    }
                 }
-            } else {
-                final InputStream content = response.getEntity().getContent();
-                ZipInputStream zipInputStream = new ZipInputStream(content);
-                final ZipEntry nextEntry = Optional.ofNullable(zipInputStream.getNextEntry())
-                        .orElseThrow(() -> new RuntimeException("Cannot download file from location: " + location));
-                final String name = nextEntry.getName();
-                final byte[] bytes = IOUtils.toByteArray(extractFileFromArchive(zipInputStream));
-
-                final Unmarshaller unmarshaller = jc.createUnmarshaller();
-                final T object = Optional.ofNullable(
-                        unmarshaller.unmarshal(new ByteArrayInputStream(bytes)))
-                        .map(jaxbElement -> {
-                            try {
-                                return (T) jaxbElement;
-                            } catch (ClassCastException _ex) {
-                                return null;
-                            }
-                        })
-                        .orElse(null);
-                return new MessaggioXML<T>(name, bytes, object);
-            }
-        } catch (URISyntaxException | KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException | UnrecoverableKeyException | KeyManagementException | JAXBException e) {
+            });
+        } catch (URISyntaxException | KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException | UnrecoverableKeyException | KeyManagementException  e) {
             throw new RuntimeException(e);
         } finally {
             Optional.ofNullable(client)
@@ -185,10 +191,13 @@ public abstract class CommonsSiopePlusService {
         SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(sslContext,
                 new String[]{"TLSv1.2", "TLSv1.1"},
                 null,
-                SSLConnectionSocketFactory.getDefaultHostnameVerifier());
+                new DefaultHostnameVerifier());
 
-        return HttpClients.custom()
+        PoolingHttpClientConnectionManager connectionManager = PoolingHttpClientConnectionManagerBuilder.create()
                 .setSSLSocketFactory(sslConnectionSocketFactory)
+                .build();
+        return HttpClients.custom()
+                .setConnectionManager(connectionManager)
                 .build();
     }
 }
