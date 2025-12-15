@@ -42,7 +42,8 @@ maven-deploy:
   stage: deploy
   image: maven:3.6.3-openjdk-17
   before_script:
-    - 'which git || (apk add --update git && rm -rf /var/cache/apk/*)'
+    # Install git if missing
+    - 'command -v git || (apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*)'
   script:
     - git submodule add --force $CENTRO_SERVIZI
     - mkdir -p /cert
@@ -57,7 +58,8 @@ maven-install:
   stage: deploy
   image: maven:3.6.3-openjdk-17
   before_script:
-    - 'which git || (apk add --update git && rm -rf /var/cache/apk/*)'
+    # Install git if missing
+    - 'command -v git || (apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*)'
   script:
     - git submodule add $CENTRO_SERVIZI
     - mkdir -p /cert
