@@ -40,7 +40,7 @@ cache:
 
 maven-deploy:
   stage: deploy
-  image: maven:alpine
+  image: eclipse-temurin:21-jdk-alpine
   before_script:
     - 'which git || (apk add --update git && rm -rf /var/cache/apk/*)'
   script:
@@ -55,7 +55,7 @@ maven-deploy:
 
 maven-install:
   stage: deploy
-  image: maven:alpine
+  image: eclipse-temurin:21-jdk-alpine
   before_script:
     - 'which git || (apk add --update git && rm -rf /var/cache/apk/*)'
   script:
@@ -70,7 +70,7 @@ maven-install:
 #la release è opzionale e manuale.
 Perform Maven Release:
   stage: release
-  image: maven:alpine
+  image: eclipse-temurin:21-jdk-alpine
   script:
     - 'which git || (apk add --update git && rm -rf /var/cache/apk/*)'
     # Install ssh-agent if not already installed, it is required by Docker.
