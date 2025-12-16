@@ -20,6 +20,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>siopeplus-commons</artifactId>
+	<name>SIOPE+ Commons</name>
 
 	<parent>
 		<groupId>it.cnr.si</groupId>
