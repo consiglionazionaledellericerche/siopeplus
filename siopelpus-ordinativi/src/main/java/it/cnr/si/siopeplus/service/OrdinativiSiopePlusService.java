@@ -127,7 +127,6 @@ public class OrdinativiSiopePlusService extends CommonsSiopePlusService {
 
             final InputStreamEntity inputStreamEntity = new InputStreamEntity(inputZIP, null);
             httpPost.setEntity(inputStreamEntity);
-            httpPost.setHeader("Transfer-Encoding", "chunked");
 
             try (CloseableHttpResponse response = client.execute(httpPost)) {
                 if (response.getCode() != HttpStatus.SC_CREATED) {
