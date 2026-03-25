@@ -76,7 +76,7 @@ import org.jvnet.jaxb.locator.ObjectLocator;
     "errore"
 })
 @XmlRootElement(name = "messaggio_rifiuto_flusso")
-public class MessaggioRifiutoFlusso implements Serializable, ToString
+public class MessaggioRifiutoFlusso implements Serializable, ToString, EsitoFlusso
 {
 
     @XmlElement(name = "testata_messaggio", required = true)

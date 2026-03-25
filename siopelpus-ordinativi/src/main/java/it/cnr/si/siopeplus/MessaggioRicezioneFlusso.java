@@ -72,7 +72,7 @@ import org.jvnet.jaxb.locator.ObjectLocator;
     "esercizio"
 })
 @XmlRootElement(name = "messaggio_ricezione_flusso")
-public class MessaggioRicezioneFlusso implements Serializable, ToString
+public class MessaggioRicezioneFlusso implements Serializable, ToString, EsitoFlusso
 {
 
     @XmlElement(name = "testata_messaggio", required = true)
