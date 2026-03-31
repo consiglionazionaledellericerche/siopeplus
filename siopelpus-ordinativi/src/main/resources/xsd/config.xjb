@@ -29,17 +29,4 @@
         </jaxb:bindings>
     </jaxb:bindings>
 
-    <jaxb:bindings schemaLocation="OPI_FLUSSO_ORDINATIVI_V_1_7_1.xsd">
-        <jaxb:bindings node="//xs:element[@name='codice_identificativo_ente']">
-            <jaxb:property>
-                <jaxb:baseType name="java.lang.String"/>
-            </jaxb:property>
-        </jaxb:bindings>
-        <jaxb:bindings node="//xs:element[@name='numero_avviso']">
-            <jaxb:property>
-                <jaxb:baseType name="java.lang.String"/>
-            </jaxb:property>
-        </jaxb:bindings>
-    </jaxb:bindings>
-
 </jaxb:bindings>
